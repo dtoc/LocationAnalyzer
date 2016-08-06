@@ -1,0 +1,6 @@
+c:\users\dtoci\documents\visual studio 2015\Projects\LocationAnalyzer\LocationAnalyzer\bin\Debug\LocationAnalyzer.exe.config
+c:\users\dtoci\documents\visual studio 2015\Projects\LocationAnalyzer\LocationAnalyzer\bin\Debug\LocationAnalyzer.exe
+c:\users\dtoci\documents\visual studio 2015\Projects\LocationAnalyzer\LocationAnalyzer\bin\Debug\LocationAnalyzer.pdb
+c:\users\dtoci\documents\visual studio 2015\Projects\LocationAnalyzer\LocationAnalyzer\obj\Debug\LocationAnalyzer.csprojResolveAssemblyReference.cache
+c:\users\dtoci\documents\visual studio 2015\Projects\LocationAnalyzer\LocationAnalyzer\obj\Debug\LocationAnalyzer.exe
+c:\users\dtoci\documents\visual studio 2015\Projects\LocationAnalyzer\LocationAnalyzer\obj\Debug\LocationAnalyzer.pdb
