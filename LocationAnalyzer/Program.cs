@@ -14,7 +14,7 @@ namespace LocationAnalyzer
         {
             using (var client = new WebClient())
             {
-                States states = new States();
+                StatesContainer statesContainer = new StatesContainer();
                 Stream stream = client.OpenRead("https://en.wikipedia.org/wiki/Lists_of_populated_places_in_the_United_States");
 
                 File.Delete("C:\\projects\\practice.txt");
@@ -27,8 +27,25 @@ namespace LocationAnalyzer
                 while (!sr.EndOfStream)
                 {
                     var currentLine = sr.ReadLine();
-                    if (states.isAState(currentLine) && currentLine.Contains("List_of_places_in"))
+                    if (statesContainer.GetState(currentLine) != null && currentLine.Contains("List_of_places_in"))
                     {
+                        var tokens = currentLine.Split(' ');
+                        foreach (var token in tokens)
+                        {
+                            var state = statesContainer.GetState(token);
+                            if (token.Contains("href"))
+                            {
+                                var strippedLink = token.Substring(5);
+                                strippedLink = strippedLink.Remove(0, 1);
+                                strippedLink = strippedLink.Remove(strippedLink.Length - 1, 1);
+                                Console.WriteLine("Link: " + strippedLink);
+                            }
+                            else if (state != null)
+                            {
+                                Console.WriteLine(state);
+                            }
+                        }
+
                         Console.WriteLine(currentLine);
                         using (var sw = File.AppendText("C:\\projects\\practice.txt"))
                         {
