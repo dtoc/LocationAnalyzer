@@ -16,18 +16,16 @@ namespace LocationAnalyzer
             {
                 States states = new States();
                 Stream stream = client.OpenRead("https://en.wikipedia.org/wiki/Lists_of_populated_places_in_the_United_States");
+
                 StreamReader sr = new StreamReader(stream);
-                int count = 0;
                 while (!sr.EndOfStream)
                 {
                     var currentLine = sr.ReadLine();
                     if (states.isAState(currentLine))
                     {
                         Console.WriteLine(currentLine);
-                        count++;
                     }
                 }
-                Console.WriteLine("count: " + count);
                 Console.ReadKey();
             }
         }
