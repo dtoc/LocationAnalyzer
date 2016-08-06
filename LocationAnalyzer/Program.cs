@@ -15,9 +15,14 @@ namespace LocationAnalyzer
             using (var client = new WebClient())
             {
                 StatesContainer statesContainer = new StatesContainer();
+
+                // Our starting URL used for seeding the rest of the app with the data and links we'll need later on.
                 Stream stream = client.OpenRead("https://en.wikipedia.org/wiki/Lists_of_populated_places_in_the_United_States");
 
+                // If we already have a file of results, delete it because it's outdated.
                 File.Delete("C:\\projects\\practice.txt");
+
+                // Recreate the file that we deleted so we can use it for logging results.
                 using (var fc = File.Create("C:\\projects\\practice.txt"))
                 {
                     fc.Close();
@@ -27,16 +32,24 @@ namespace LocationAnalyzer
                 while (!sr.EndOfStream)
                 {
                     var currentLine = sr.ReadLine();
+                    
+                    // We only care about webpage lines that 1) reference an American state and 2) contain data on the list of places in that state
                     if (statesContainer.GetState(currentLine) != null && currentLine.Contains("List_of_places_in"))
                     {
+                        // Since each line contains multiple bits of useful information, let's tokenize the line.
                         var tokens = currentLine.Split(' ');
                         foreach (var token in tokens)
                         {
                             var state = statesContainer.GetState(token);
+
+                            // If the current token contains an href, we want to parse out the link.
                             if (token.Contains("href"))
                             {
+                                // We want the substring that no longer has the href in it.
                                 var strippedLink = token.Substring(5);
+                                // We want to remove the first character, since it's a quotation mark.
                                 strippedLink = strippedLink.Remove(0, 1);
+                                // We want to remove the last character, since it's a quotation mark.
                                 strippedLink = strippedLink.Remove(strippedLink.Length - 1, 1);
                                 Console.WriteLine("Link: " + strippedLink);
                             }
@@ -47,6 +60,8 @@ namespace LocationAnalyzer
                         }
 
                         Console.WriteLine(currentLine);
+
+                        // Logging the results to the log file
                         using (var sw = File.AppendText("C:\\projects\\practice.txt"))
                         {
                             sw.WriteLine(currentLine);
