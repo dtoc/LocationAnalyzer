@@ -23,7 +23,7 @@ namespace LocationAnalyzer
         }
 
         // Given a token, check if it has a US state inside. If it does, return the state. Otherwise return null.
-        public string GetState(string token)
+        public string GetStateName(string token)
         {
             return states.Where(s => token.Contains(s)).FirstOrDefault();
         }

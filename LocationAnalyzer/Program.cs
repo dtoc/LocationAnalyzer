@@ -32,15 +32,16 @@ namespace LocationAnalyzer
                 while (!sr.EndOfStream)
                 {
                     var currentLine = sr.ReadLine();
+                    State state = new State();
                     
                     // We only care about webpage lines that 1) reference an American state and 2) contain data on the list of places in that state
-                    if (statesContainer.GetState(currentLine) != null && currentLine.Contains("List_of_places_in"))
+                    if (statesContainer.GetStateName(currentLine) != null && currentLine.Contains("List_of_places_in"))
                     {
                         // Since each line contains multiple bits of useful information, let's tokenize the line.
                         var tokens = currentLine.Split(' ');
                         foreach (var token in tokens)
                         {
-                            var state = statesContainer.GetState(token);
+                            var stateName = statesContainer.GetStateName(token);
 
                             // If the current token contains an href, we want to parse out the link.
                             if (token.Contains("href"))
@@ -51,11 +52,12 @@ namespace LocationAnalyzer
                                 strippedLink = strippedLink.Remove(0, 1);
                                 // We want to remove the last character, since it's a quotation mark.
                                 strippedLink = strippedLink.Remove(strippedLink.Length - 1, 1);
-                                Console.WriteLine("Link: " + strippedLink);
+                                state.Link = strippedLink;
+                                
                             }
-                            else if (state != null)
+                            else if (stateName != null)
                             {
-                                Console.WriteLine(state);
+                                state.Name = stateName;
                             }
                         }
 
