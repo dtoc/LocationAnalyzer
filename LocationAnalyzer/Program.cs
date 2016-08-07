@@ -65,12 +65,7 @@ namespace LocationAnalyzer
 
                 using (var sw = File.AppendText("C:\\projects\\practice.txt"))
                 {
-                    foreach (var state in states)
-                    {
-                        sw.WriteLine(state.Name);
-                        sw.WriteLine(state.Link);
-                        sw.WriteLine();
-                    }
+                    states.ForEach(s => sw.WriteLine(s.Name + Environment.NewLine + s.Link + Environment.NewLine));
                 }
                 Console.ReadKey();
             }
