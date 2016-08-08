@@ -12,6 +12,11 @@ namespace LocationAnalyzer
     {
         static void Main(string[] args)
         {
+            List<State> states = SeedStates();
+        }
+
+        public static List<State> SeedStates()
+        {
             using (var client = new WebClient())
             {
                 StatesContainer statesContainer = new StatesContainer();
@@ -36,11 +41,19 @@ namespace LocationAnalyzer
                     State state = new State();
                     var stateName = statesContainer.GetStateName(currentLine);
                     // We only care about webpage lines that 1) reference an American state and 2) contain data on the list of places in that state
-                    if (stateName != null && currentLine.Contains("List_of_places_in"))
+                    if (stateName != null && (
+                        currentLine.Contains("List_of_places_in"))
+                        || currentLine.Contains("List_of_cities_in")
+                        || currentLine.Contains("List_of_towns_in")
+                        || currentLine.Contains("List_of_cities_and_towns_in")
+                        || currentLine.Contains("List_of_municipalities_in")
+                        || currentLine.Contains("List_of_populated_places_")
+                        || currentLine.Contains("List_of_census-designated-places_in")
+                        || currentLine.Contains("List_of_unincorporated"))
                     {
                         // Since each line contains multiple bits of useful information, let's tokenize the line.
                         var tokens = currentLine.Split(' ');
-                        var linkToken = tokens.Where(t => t.Contains("href")).SingleOrDefault();
+                        var linkToken = tokens.Where(t => t.Contains("href")).FirstOrDefault();
 
                         if (linkToken != null)
                         {
@@ -67,7 +80,8 @@ namespace LocationAnalyzer
                 {
                     states.ForEach(s => sw.WriteLine(s.Name + Environment.NewLine + s.Link + Environment.NewLine));
                 }
-                Console.ReadKey();
+
+                return states;
             }
         }
     }
