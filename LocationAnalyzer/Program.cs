@@ -52,7 +52,7 @@ namespace LocationAnalyzer
                             || currentLine.Contains("List_of_municipalities_in")
                             || currentLine.Contains("List_of_populated_places_")
                             || currentLine.Contains("List_of_census-designated-places_in")
-                            || currentLine.Contains("List_of_unincorporated")
+                            || currentLine.Contains("List_of_unincorporated"))
                         {
                             // Since each line contains multiple bits of useful information, let's tokenize the line.
                             var tokens = currentLine.Split(' ');
