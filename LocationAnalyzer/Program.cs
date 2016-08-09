@@ -66,26 +66,44 @@ namespace LocationAnalyzer
                                 strippedLink = strippedLink.Remove(0, 1);
                                 // We want to remove the last character, since it's a quotation mark.
                                 strippedLink = strippedLink.Remove(strippedLink.Length - 1, 1);
-                                state.Link = strippedLink;
+                                state.Links.Add(strippedLink);
                             }
 
                             state.Name = stateName;
-                            if (!states.Where(s => s.Link == state.Link && s.Name == state.Name).Any() && !String.IsNullOrEmpty(stateName))
+                            // If there isn't already an entry for this state, add it to our list of states.
+                            if (!states.Where(s => s.Name == stateName).Any())
                             {
                                 states.Add(state);
                             }
-
+                            // Else since we already have an entry for this state, add just the link to that state's object
+                            else
+                            {
+                                if (state.Links.Count > 0)
+                                {
+                                    states.Where(s => s.Name == stateName).First().Links.Add(state.Links.First());
+                                }
+                            }
                             Console.WriteLine(currentLine);
                         }
                     }
                 }
+
+                Console.WriteLine("COUNT: " + states.Count);
 
                 // Sorting the states in alphabetical order
                 states = SortStates(states);
 
                 using (var sw = File.AppendText("C:\\projects\\practice.txt"))
                 {
-                    states.ForEach(s => sw.WriteLine(s.Name + Environment.NewLine + s.Link + Environment.NewLine));
+                    foreach (var state in states)
+                    {
+                        sw.WriteLine(state.Name);
+                        foreach (var link in state.Links)
+                        {
+                            sw.WriteLine(link);
+                        }
+                        sw.WriteLine();
+                    }
                 }
 
                 return states;

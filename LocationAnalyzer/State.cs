@@ -9,12 +9,11 @@ namespace LocationAnalyzer
     class State
     {
         public List<string> Places = new List<String>();
+        public List<string> Links = new List<string>();
         public string Name { get; set; }
-        public string Link { get; set; }
-        public State (string vName, string vLink)
+        public State (string vName)
         {
             Name = vName;
-            Link = vLink;
         }
         public State()
         {
