@@ -40,41 +40,48 @@ namespace LocationAnalyzer
                     var currentLine = sr.ReadLine();
                     State state = new State();
                     var stateName = statesContainer.GetStateName(currentLine);
-                    // We only care about webpage lines that 1) reference an American state and 2) contain data on the list of places in that state
-                    if (stateName != null && (
-                        currentLine.Contains("List_of_places_in"))
-                        || currentLine.Contains("List_of_cities_in")
-                        || currentLine.Contains("List_of_towns_in")
-                        || currentLine.Contains("List_of_cities_and_towns_in")
-                        || currentLine.Contains("List_of_municipalities_in")
-                        || currentLine.Contains("List_of_populated_places_")
-                        || currentLine.Contains("List_of_census-designated-places_in")
-                        || currentLine.Contains("List_of_unincorporated"))
+
+                    // Only proceed if we're dealing with a state that we care about
+                    if (!String.IsNullOrEmpty(stateName))
                     {
-                        // Since each line contains multiple bits of useful information, let's tokenize the line.
-                        var tokens = currentLine.Split(' ');
-                        var linkToken = tokens.Where(t => t.Contains("href")).FirstOrDefault();
-
-                        if (linkToken != null)
+                        // We only care about webpage lines that 1) reference an American state and 2) contain data on the list of places in that state
+                        if ( currentLine.Contains("List_of_places_in")  
+                            || currentLine.Contains("List_of_cities_in")
+                            || currentLine.Contains("List_of_towns_in")
+                            || currentLine.Contains("List_of_cities_and_towns_in")
+                            || currentLine.Contains("List_of_municipalities_in")
+                            || currentLine.Contains("List_of_populated_places_")
+                            || currentLine.Contains("List_of_census-designated-places_in")
+                            || currentLine.Contains("List_of_unincorporated")
                         {
-                            // We want the substring that no longer has the href in it.
-                            var strippedLink = linkToken.Substring(5);
-                            // We want to remove the first character, since it's a quotation mark.
-                            strippedLink = strippedLink.Remove(0, 1);
-                            // We want to remove the last character, since it's a quotation mark.
-                            strippedLink = strippedLink.Remove(strippedLink.Length - 1, 1);
-                            state.Link = strippedLink;
-                        }
+                            // Since each line contains multiple bits of useful information, let's tokenize the line.
+                            var tokens = currentLine.Split(' ');
+                            var linkToken = tokens.Where(t => t.Contains("href")).FirstOrDefault();
 
-                        state.Name = stateName;
-                        if (!states.Where(s => s.Link == state.Link && s.Name == state.Name).Any())
-                        {
-                            states.Add(state);
-                        }
+                            if (linkToken != null)
+                            {
+                                // We want the substring that no longer has the href in it.
+                                var strippedLink = linkToken.Substring(5);
+                                // We want to remove the first character, since it's a quotation mark.
+                                strippedLink = strippedLink.Remove(0, 1);
+                                // We want to remove the last character, since it's a quotation mark.
+                                strippedLink = strippedLink.Remove(strippedLink.Length - 1, 1);
+                                state.Link = strippedLink;
+                            }
 
-                        Console.WriteLine(currentLine);
+                            state.Name = stateName;
+                            if (!states.Where(s => s.Link == state.Link && s.Name == state.Name).Any() && !String.IsNullOrEmpty(stateName))
+                            {
+                                states.Add(state);
+                            }
+
+                            Console.WriteLine(currentLine);
+                        }
                     }
                 }
+
+                // Sorting the states in alphabetical order
+                states = SortStates(states);
 
                 using (var sw = File.AppendText("C:\\projects\\practice.txt"))
                 {
@@ -83,6 +90,13 @@ namespace LocationAnalyzer
 
                 return states;
             }
+        }
+
+        // Method for sorting our states. Added it as a method in case we later want to sort 
+        // using a custom comparator 
+        public static List<State> SortStates(List<State> list)
+        {
+            return list.OrderBy(s => s.Name).ToList();
         }
     }
 }
