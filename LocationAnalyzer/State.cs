@@ -8,7 +8,7 @@ namespace LocationAnalyzer
 {
     class State
     {
-        public List<string> Places = new List<String>();
+        public List<string> Places = new List<string>();
         public List<string> Links = new List<string>();
         public string Name { get; set; }
         public State (string vName)

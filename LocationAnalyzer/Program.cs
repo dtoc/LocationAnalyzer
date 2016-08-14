@@ -13,6 +13,16 @@ namespace LocationAnalyzer
         static void Main(string[] args)
         {
             List<State> states = SeedStates();
+            AddLocationData(states);
+            foreach (var state in states)
+            {
+                foreach (var place in state.Places)
+                {
+                    Console.WriteLine(place);
+                }
+            }
+
+            Console.ReadKey();
         }
 
         public static List<State> SeedStates()
@@ -94,6 +104,7 @@ namespace LocationAnalyzer
                     }
                 }
 
+                sr.Close();
                 Console.WriteLine("COUNT: " + states.Count);
 
                 // Sorting the states in alphabetical order
@@ -113,6 +124,37 @@ namespace LocationAnalyzer
                 }
 
                 return states;
+            }
+        }
+
+        public static void AddLocationData(List<State> states)
+        {
+            string rootUrl = "https://en.wikipedia.org";
+            foreach (var state in states)
+            {
+                foreach (var link in state.Links)
+                {
+                    string targetUrl = rootUrl + link;
+                    targetUrl.Replace("\"", "");
+                    using (var client = new WebClient())
+                    {
+                        try
+                        {
+                            Stream stream = client.OpenRead(targetUrl);
+                            StreamReader sr = new StreamReader(stream);
+                            while (!sr.EndOfStream)
+                            {
+                                var currentLine = sr.ReadLine();
+                                state.Places.Add(currentLine);
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine(ex);
+                            Console.WriteLine("Invalid link");
+                        }
+                    }
+                }
             }
         }
 
