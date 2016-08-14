@@ -6,3 +6,6 @@ name despite having no relation?
 Why not scrape Wikipedia or some other data store...and assesmble a list of every town and city in every state...
 and then get to work with figuring out how many dupes there are and which name is most common?! Sure sounds like
 a fun little project. ;D
+
+First I will try to grab the data I need from Wikipedia's pages directly. It's possible to download Wikipedia pages as 
+XML files, so I will also try to incorporate local data at a later date. 
