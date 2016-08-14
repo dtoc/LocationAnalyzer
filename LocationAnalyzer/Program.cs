@@ -66,24 +66,30 @@ namespace LocationAnalyzer
                                 strippedLink = strippedLink.Remove(0, 1);
                                 // We want to remove the last character, since it's a quotation mark.
                                 strippedLink = strippedLink.Remove(strippedLink.Length - 1, 1);
-                                state.Links.Add(strippedLink);
-                            }
 
-                            state.Name = stateName;
-                            // If there isn't already an entry for this state, add it to our list of states.
-                            if (!states.Where(s => s.Name == stateName).Any())
-                            {
-                                states.Add(state);
-                            }
-                            // Else since we already have an entry for this state, add just the link to that state's object
-                            else
-                            {
-                                if (state.Links.Count > 0)
+                                // Continue only if we didn't already handle this specific link
+                                if (!states.Any(s => s.Links.Contains(strippedLink)))
                                 {
-                                    states.Where(s => s.Name == stateName).First().Links.Add(state.Links.First());
+                                    state.Links.Add(strippedLink);
+
+                                    state.Name = stateName;
+                                    // If there isn't already an entry for this state, add it to our list of states.
+                                    if (!states.Where(s => s.Name == stateName).Any())
+                                    {
+                                        states.Add(state);
+                                    }
+                                    // Else since we already have an entry for this state, add just the link to that state's object
+                                    else
+                                    {
+                                        if (state.Links.Count > 0)
+                                        {
+                                            states.Where(s => s.Name == stateName).First().Links.Add(state.Links.First());
+                                        }
+                                    }
+
+                                    Console.WriteLine(currentLine);
                                 }
-                            }
-                            Console.WriteLine(currentLine);
+                            }                            
                         }
                     }
                 }
