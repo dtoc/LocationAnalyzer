@@ -9,3 +9,5 @@ a fun little project. ;D
 
 First I will try to grab the data I need from Wikipedia's pages directly. It's possible to download Wikipedia pages as 
 XML files, so I will also try to incorporate local data at a later date. 
+
+To see a sample of the output, take a look at the practice.txt file I've attached. 
