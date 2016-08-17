@@ -10,8 +10,16 @@ namespace LocationAnalyzer
 {
     class Program
     {
+        public static string logfile = "C:\\projects\\practice" + DateTimeOffset.Now.Ticks.ToString() + ".txt";
+
         static void Main(string[] args)
         {
+            // Create a timestamped file for logging results
+            using (var fc = File.Create(logfile))
+            {
+                fc.Close();
+            }
+
             try
             {
                 List<State> states = SeedStates();
@@ -45,15 +53,6 @@ namespace LocationAnalyzer
                 // Our starting URL used for seeding the rest of the app with the data and links we'll need later on.
                 Stream stream = client.OpenRead("https://en.wikipedia.org/wiki/Lists_of_populated_places_in_the_United_States");
                 List<State> states = new List<State>();
-
-                // If we already have a file of results, delete it because it's outdated.
-                File.Delete("C:\\projects\\practice.txt");
-
-                // Recreate the file that we deleted so we can use it for logging results.
-                using (var fc = File.Create("C:\\projects\\practice.txt"))
-                {
-                    fc.Close();
-                }
 
                 StreamReader sr = new StreamReader(stream);
                 while (!sr.EndOfStream)
@@ -121,7 +120,7 @@ namespace LocationAnalyzer
                 // Sorting the states in alphabetical order
                 states = SortStates(states);
 
-                using (var sw = File.AppendText("C:\\projects\\practice.txt"))
+                using (var sw = File.AppendText(logfile))
                 {
                     foreach (var state in states)
                     {
@@ -153,15 +152,18 @@ namespace LocationAnalyzer
                         {
                             Stream stream = client.OpenRead(targetUrl);
                             StreamReader sr = new StreamReader(stream);
-                            using (var sw = File.AppendText("C:\\projects\\practice.txt"))
+                            using (var sw = File.AppendText(logfile))
                             {
                                 while (!sr.EndOfStream)
                                 {
                                     var currentLine = sr.ReadLine();
                                     // Temporarily writing content to a file so I can see how the data is structured.
                                     // Once I am able to parse what I want, I won't need to write this to a file anymore.
-                                    sw.WriteLine(currentLine);
-                                    state.Places.Add(currentLine);
+                                    if (currentLine.Contains("td scope"))
+                                    {
+                                        sw.WriteLine(currentLine);
+                                        state.Places.Add(currentLine);
+                                    }
                                 }
                             }
                         }
