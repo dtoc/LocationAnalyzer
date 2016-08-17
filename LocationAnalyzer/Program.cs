@@ -98,7 +98,7 @@ namespace LocationAnalyzer.Parser
                                 strippedLink = strippedLink.Remove(strippedLink.Length - 1, 1);
 
                                 // Continue only if we didn't already handle this specific link
-                                if (!states.Any(s => s.Links.Contains(strippedLink)))
+                                if (!states.Any(s => s.Links.Contains(strippedLink)) && !strippedLink.Contains("redlink"))
                                 {
                                     state.Links.Add(strippedLink);
 
