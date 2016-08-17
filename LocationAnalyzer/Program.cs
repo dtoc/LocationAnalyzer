@@ -153,10 +153,16 @@ namespace LocationAnalyzer
                         {
                             Stream stream = client.OpenRead(targetUrl);
                             StreamReader sr = new StreamReader(stream);
-                            while (!sr.EndOfStream)
+                            using (var sw = File.AppendText("C:\\projects\\practice.txt"))
                             {
-                                var currentLine = sr.ReadLine();
-                                state.Places.Add(currentLine);
+                                while (!sr.EndOfStream)
+                                {
+                                    var currentLine = sr.ReadLine();
+                                    // Temporarily writing content to a file so I can see how the data is structured.
+                                    // Once I am able to parse what I want, I won't need to write this to a file anymore.
+                                    sw.WriteLine(currentLine);
+                                    state.Places.Add(currentLine);
+                                }
                             }
                         }
                         catch (Exception ex)
