@@ -20,7 +20,6 @@ namespace LocationAnalyzer.Parser
             {
                 fc.Close();
             }
-            timer.Finish();
             Console.WriteLine("Time to create timestamped file: " + timer.DurationMs());
             Console.ReadKey();
 
@@ -28,13 +27,11 @@ namespace LocationAnalyzer.Parser
             {
                 timer.Start();
                 List<State> states = SeedStates();
-                timer.Finish();
                 Console.WriteLine("Time to seed states with preliminary data: " + timer.DurationMs());
                 Console.ReadKey();
 
                 timer.Start();
                 AddLocationData(states);
-                timer.Finish();
                 Console.WriteLine("Time to seed states with location data: " + timer.DurationS());
                 Console.ReadKey();
 

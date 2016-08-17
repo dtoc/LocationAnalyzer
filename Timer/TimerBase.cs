@@ -14,26 +14,20 @@ namespace LocationAnalyzer.Timer
         }
 
         public DateTime StartTime { get; set; }
-        public DateTime FinishTime { get; set; }
 
         public void Start()
         {
             StartTime = DateTime.Now;
         }
 
-        public void Finish()
-        {
-            FinishTime = DateTime.Now;
-        }
-
         public string DurationMs()
         {
-            return (FinishTime - StartTime).Milliseconds.ToString();
+            return (DateTime.Now - StartTime).Milliseconds.ToString();
         }
 
         public string DurationS()
         {
-            return (FinishTime - StartTime).Seconds.ToString();
+            return (DateTime.Now - StartTime).Seconds.ToString();
         }
     }
 }
