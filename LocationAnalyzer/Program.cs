@@ -12,17 +12,28 @@ namespace LocationAnalyzer
     {
         static void Main(string[] args)
         {
-            List<State> states = SeedStates();
-            AddLocationData(states);
-            foreach (var state in states)
+            try
             {
-                foreach (var place in state.Places)
-                {
-                    Console.WriteLine(place);
-                }
-            }
+                List<State> states = SeedStates();
 
-            Console.ReadKey();
+                AddLocationData(states);
+                foreach (var state in states)
+                {
+                    foreach (var place in state.Places)
+                    {
+                        Console.WriteLine(place);
+                    }
+                }
+
+                Console.ReadKey();
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.ToString());
+                Console.ReadKey();
+                return;
+            }
         }
 
         public static List<State> SeedStates()
