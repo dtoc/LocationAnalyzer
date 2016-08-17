@@ -3,26 +3,34 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
-using System.Text;
-using System.Threading.Tasks;
+using LocationAnalyzer.Timer;
 
-namespace LocationAnalyzer
+namespace LocationAnalyzer.Parser
 {
     class Program
     {
         public static string logfile = "C:\\projects\\practice" + DateTimeOffset.Now.Ticks.ToString() + ".txt";
+        public static TimerBase timer = new TimerBase();
 
         static void Main(string[] args)
         {
             // Create a timestamped file for logging results
+            timer.Start();
             using (var fc = File.Create(logfile))
             {
                 fc.Close();
             }
+            timer.Finish();
+            Console.WriteLine("Time to create timestamped file: " + timer.DurationMs());
+            Console.ReadKey();
 
             try
             {
+                timer.Start();
                 List<State> states = SeedStates();
+                timer.Finish();
+                Console.WriteLine("Time to seed states with preliminary data: " + timer.DurationMs());
+                Console.ReadKey();
 
                 AddLocationData(states);
                 foreach (var state in states)
