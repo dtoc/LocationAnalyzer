@@ -15,34 +15,27 @@ namespace LocationAnalyzer.Parser
         static void Main(string[] args)
         {
             // Create a timestamped file for logging results
+            Console.WriteLine("Creating timestamped file for logging results.");
             timer.Start();
             using (var fc = File.Create(logfile))
             {
                 fc.Close();
             }
             Console.WriteLine("Time to create timestamped file: " + timer.DurationMs());
-            Console.ReadKey();
 
             try
             {
+                Console.WriteLine("Seeding state objects with preliminary data.");
                 timer.Start();
                 List<State> states = SeedStates();
-                Console.WriteLine("Time to seed states with preliminary data: " + timer.DurationMs());
-                Console.ReadKey();
+                Console.WriteLine("Time to seed state objects with preliminary data: " + timer.DurationMs());
 
+                Console.WriteLine("Seeding state objects with location data.");
                 timer.Start();
                 AddLocationData(states);
                 Console.WriteLine("Time to seed states with location data: " + timer.DurationS());
-                Console.ReadKey();
 
-                foreach (var state in states)
-                {
-                    foreach (var place in state.Places)
-                    {
-                        Console.WriteLine(place);
-                    }
-                }
-
+                Console.WriteLine("Execution complete!");
                 Console.ReadKey();
 
             }
@@ -116,8 +109,6 @@ namespace LocationAnalyzer.Parser
                                             states.Where(s => s.Name == stateName).First().Links.Add(state.Links.First());
                                         }
                                     }
-
-                                    Console.WriteLine(currentLine);
                                 }
                             }                            
                         }
