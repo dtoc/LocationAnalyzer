@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Net;
 using LocationAnalyzer.Timer;
+using System.Text.RegularExpressions;
 
 namespace LocationAnalyzer.Parser
 {
@@ -162,6 +163,8 @@ namespace LocationAnalyzer.Parser
                                     // Once I am able to parse what I want, I won't need to write this to a file anymore.
                                     if (currentLine.Contains("td scope"))
                                     {
+                                        var match = Regex.Match(currentLine, "(\\b(title=\")\\b).+?(?=,)");
+                                        sw.WriteLine("derp: " + match.ToString().Substring(7));
                                         sw.WriteLine(currentLine);
                                         state.Places.Add(currentLine);
                                     }
