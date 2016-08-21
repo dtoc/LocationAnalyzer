@@ -36,6 +36,9 @@ namespace LocationAnalyzer.Parser
                 AddLocationData(states);
                 Console.WriteLine("Time to seed states with location data: " + timer.DurationS());
 
+                Console.WriteLine("Results: ");
+                DisplayStatePlaces(states);
+
                 Console.WriteLine("Execution complete!");
                 Console.ReadKey();
 
@@ -144,37 +147,37 @@ namespace LocationAnalyzer.Parser
             string rootUrl = "https://en.wikipedia.org";
             foreach (var state in states)
             {
-                foreach (var link in state.Links)
+                using (var sw = File.AppendText(logfile))
                 {
-                    string targetUrl = rootUrl + link;
-                    targetUrl.Replace("\"", "");
-                    using (var client = new WebClient())
+                    sw.WriteLine("State: " + state.Name);
+                    foreach (var link in state.Links)
                     {
-                        try
+                        string targetUrl = rootUrl + link;
+                        targetUrl.Replace("\"", "");
+                        using (var client = new WebClient())
                         {
-                            Stream stream = client.OpenRead(targetUrl);
-                            StreamReader sr = new StreamReader(stream);
-                            using (var sw = File.AppendText(logfile))
+                            try
                             {
+                                Stream stream = client.OpenRead(targetUrl);
+                                StreamReader sr = new StreamReader(stream);
                                 while (!sr.EndOfStream)
                                 {
                                     var currentLine = sr.ReadLine();
-                                    // Temporarily writing content to a file so I can see how the data is structured.
-                                    // Once I am able to parse what I want, I won't need to write this to a file anymore.
+
                                     if (currentLine.Contains("td scope"))
                                     {
                                         var match = Regex.Match(currentLine, "(\\b(title=\")\\b).+?(?=,)");
-                                        sw.WriteLine("derp: " + match.ToString().Substring(7));
-                                        sw.WriteLine(currentLine);
-                                        state.Places.Add(currentLine);
+                                        var place = match.ToString().Substring(7);
+                                        state.Places.Add(place);
+                                        sw.WriteLine("\t" + place);
                                     }
                                 }
                             }
-                        }
-                        catch (Exception ex)
-                        {
-                            Console.WriteLine(ex);
-                            Console.WriteLine("Invalid link");
+                            catch (Exception ex)
+                            {
+                                Console.WriteLine(ex);
+                                Console.WriteLine("Invalid link");
+                            }
                         }
                     }
                 }
@@ -186,6 +189,17 @@ namespace LocationAnalyzer.Parser
         public static List<State> SortStates(List<State> list)
         {
             return list.OrderBy(s => s.Name).ToList();
+        }
+
+        public static void DisplayStatePlaces(List<State> list)
+        {
+            list.ForEach(s => DisplayStatePlaces(s));
+        }
+
+        public static void DisplayStatePlaces(State state)
+        {
+            Console.WriteLine(state.Name);
+            state.Places.ForEach(p => Console.WriteLine("\t" + p));
         }
     }
 }
