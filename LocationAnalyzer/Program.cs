@@ -36,8 +36,10 @@ namespace LocationAnalyzer.Parser
                 AddLocationData(states);
                 Console.WriteLine("Time to seed states with location data: " + timer.DurationS());
 
-                Console.WriteLine("Results: ");
-                DisplayStatePlaces(states);
+                Console.WriteLine("Logging state places.");
+                timer.Start();
+                LogStatePlaces(states);
+                Console.WriteLine("Time to log state places: " + timer.DurationMs());
 
                 Console.WriteLine("Execution complete!");
                 Console.ReadKey();
@@ -120,23 +122,9 @@ namespace LocationAnalyzer.Parser
                 }
 
                 sr.Close();
-                Console.WriteLine("COUNT: " + states.Count);
 
                 // Sorting the states in alphabetical order
                 states = SortStates(states);
-
-                using (var sw = File.AppendText(logfile))
-                {
-                    foreach (var state in states)
-                    {
-                        sw.WriteLine(state.Name);
-                        foreach (var link in state.Links)
-                        {
-                            sw.WriteLine(link);
-                        }
-                        sw.WriteLine();
-                    }
-                }
 
                 return states;
             }
@@ -147,37 +135,32 @@ namespace LocationAnalyzer.Parser
             string rootUrl = "https://en.wikipedia.org";
             foreach (var state in states)
             {
-                using (var sw = File.AppendText(logfile))
+                foreach (var link in state.Links)
                 {
-                    sw.WriteLine("State: " + state.Name);
-                    foreach (var link in state.Links)
+                    string targetUrl = rootUrl + link;
+                    targetUrl.Replace("\"", "");
+                    using (var client = new WebClient())
                     {
-                        string targetUrl = rootUrl + link;
-                        targetUrl.Replace("\"", "");
-                        using (var client = new WebClient())
+                        try
                         {
-                            try
+                            Stream stream = client.OpenRead(targetUrl);
+                            StreamReader sr = new StreamReader(stream);
+                            while (!sr.EndOfStream)
                             {
-                                Stream stream = client.OpenRead(targetUrl);
-                                StreamReader sr = new StreamReader(stream);
-                                while (!sr.EndOfStream)
-                                {
-                                    var currentLine = sr.ReadLine();
+                                var currentLine = sr.ReadLine();
 
-                                    if (currentLine.Contains("td scope"))
-                                    {
-                                        var match = Regex.Match(currentLine, "(\\b(title=\")\\b).+?(?=,)");
-                                        var place = match.ToString().Substring(7);
-                                        state.Places.Add(place);
-                                        sw.WriteLine("\t" + place);
-                                    }
+                                if (currentLine.Contains("td scope"))
+                                {
+                                    var match = Regex.Match(currentLine, "(\\b(title=\")\\b).+?(?=,)");
+                                    var place = match.ToString().Substring(7);
+                                    state.Places.Add(place);
                                 }
                             }
-                            catch (Exception ex)
-                            {
-                                Console.WriteLine(ex);
-                                Console.WriteLine("Invalid link");
-                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine(ex);
+                            Console.WriteLine("Invalid link");
                         }
                     }
                 }
@@ -191,15 +174,18 @@ namespace LocationAnalyzer.Parser
             return list.OrderBy(s => s.Name).ToList();
         }
 
-        public static void DisplayStatePlaces(List<State> list)
+        public static void LogStatePlaces(List<State> list)
         {
-            list.ForEach(s => DisplayStatePlaces(s));
-        }
+            using (var sw = File.AppendText(logfile))
+            {
+                foreach (var state in list)
+                {
+                    sw.WriteLine(state.Name);
+                    state.Places.ForEach(p => sw.WriteLine("\t" + p));
+                }
 
-        public static void DisplayStatePlaces(State state)
-        {
-            Console.WriteLine(state.Name);
-            state.Places.ForEach(p => Console.WriteLine("\t" + p));
+                sw.Close();
+            }
         }
     }
 }
