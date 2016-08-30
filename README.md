@@ -33,3 +33,22 @@ some cases where a list of towns will have places that a list of cities will not
 picture as possible into a state's places, I will write slightly different parsing code so that I can get data from
 each of these lists. The list of cities might have its html structured differently than the list of towns, so different
 parsing strategies will be necessary for each page.
+
+8/29/2016
+
+Apologies for the delay - I was doing some traveling and then was slammed by work and life in general. Today
+I worked on making my parsing strategy a little more inclusive. The last time I worked on this code, my logfile
+was being filled with around 13KB of useful data. But I noticed that some states had a noticeable lack of places!
+So I worked on the parsing strategy some more to grab locations even from HTML lines that don't have a "td scope"
+as an easy parsing hook. This skyrocketed my usable data from 13KB to over 500KB! The list of states and their places
+is so much more massive because now I'm getting a much bigger picture of what places are in each state.
+
+I still need to work on the parsing some more, though. The code itself isn't very clean. The next thing I want to add
+is a constraint check that will make the parsing cleaner. More details on that in the form of an explanation once the
+code is implemented and pushed. Basically, a constraint check is a useful technique for declaring what your search agent
+should never violate during its search. For example, my search agent should never consider a line of HTML as relevant
+if it contains "List of" anywhere, as my visual inspection of the HTML has already proven to me that lines with valuable
+place data aren't going to have "List of" anywhere in them. So I can safely discard a line if it has "List of" in it when
+I'm searching for a state's places. A constraint function would be used to periodically check whether or not the agent is
+violating any such rules. It's used as a guiding principle while the agent is working so that it can take a step back
+if it ever sees that it's about to violate a constraint. 
