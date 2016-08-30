@@ -155,6 +155,30 @@ namespace LocationAnalyzer.Parser
                                     var place = match.ToString().Substring(7);
                                     state.Places.Add(place);
                                 }
+                                else if (currentLine.Contains("title") && currentLine.Contains(state.Name) 
+                                    && !currentLine.Contains("span") && !currentLine.Contains("ul") 
+                                    && !currentLine.Contains("abbr") && !currentLine.Contains("List of")
+                                    && !currentLine.Contains("census") && !currentLine.Contains("places")
+                                    && !currentLine.Contains("Cities"))
+                                {
+                                    var pattern = Regex.Match(currentLine, ".*(?=\")");
+                                    var chunk = pattern.ToString();
+                                    var match = currentLine.Substring(chunk.Length);
+
+                                    pattern = Regex.Match(match, ".*(?=\\<)");
+                                    chunk = pattern.ToString();
+                                    match = match.Substring(0, chunk.Length);
+
+                                    pattern = Regex.Match(match, ".*(?=<)");
+                                    chunk = pattern.ToString();
+                                    match = match.Substring(0, chunk.Length);
+
+                                    if (match.Length > 5)
+                                    {
+                                        var place = match.Substring(2);
+                                        state.Places.Add(place);
+                                    }
+                                }
                             }
                         }
                         catch (Exception ex)
