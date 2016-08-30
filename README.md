@@ -61,3 +61,14 @@ that I want to know if there's any duplicate towns/cities/etc inside of a state.
 that I want to know if there's any town/city/etc that appears in multiple states. The results are very preliminary. I still
 need to clean up the parsing and clean up the code before I dive more into getting results to the question of how many duplicates
 there are. But I was excited to get a small glimpse ahead of time, which is why I added those new methods now. :)
+
+-- Since some states' list of places is sorted alphabetically, I should be able to implement a nice searching algorithm
+for when I want to search for duplicates or for the number of times something occurs. Right now, if I take place X and want to
+see how many times that place occurs in every state, I check every place in every state's list of places. That's not very smart
+because it's doing a lot of unnecesssary work - after all, if you're searching an alphabetized list and you've gotten far enough
+into the list to know that none of the rest of the items could possibly match, you can stop searching that list and move on to
+the next state's list of places. I'm really excited to see how much faster the application will be with that change! For the
+states that have a list that isn't sorted, I bet I can sort the list before doing the search and then do a smarter search...
+and have it perform faster than not sorting and just searching everything.
+
+Will be an interesting experiment!
