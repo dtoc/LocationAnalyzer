@@ -52,3 +52,12 @@ place data aren't going to have "List of" anywhere in them. So I can safely disc
 I'm searching for a state's places. A constraint function would be used to periodically check whether or not the agent is
 violating any such rules. It's used as a guiding principle while the agent is working so that it can take a step back
 if it ever sees that it's about to violate a constraint. 
+
+-- DERP. The logfile was over 500KB because there were duplicates already present since I processed similar links more than 
+once. :D Needed to correct that error asap!
+
+I also added some methods to check for duplicates in each state and across each state. When I say in each state, I mean
+that I want to know if there's any duplicate towns/cities/etc inside of a state. When I say across each state, I mean
+that I want to know if there's any town/city/etc that appears in multiple states. The results are very preliminary. I still
+need to clean up the parsing and clean up the code before I dive more into getting results to the question of how many duplicates
+there are. But I was excited to get a small glimpse ahead of time, which is why I added those new methods now. :)

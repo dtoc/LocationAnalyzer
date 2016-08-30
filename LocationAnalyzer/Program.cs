@@ -41,6 +41,18 @@ namespace LocationAnalyzer.Parser
                 LogStatePlaces(states);
                 Console.WriteLine("Time to log state places: " + timer.DurationMs());
 
+                Console.WriteLine("Checking for potential duplicates within each state.");
+                timer.Start();
+                CheckForDuplicatesInEachState(states);
+                Console.WriteLine("Time to check for potential duplicates within each state: " + timer.DurationMs());
+
+                Console.WriteLine("Checking for potential duplicates across each state.");
+                timer.Start();
+                CheckForDuplicatesAcrossEachState(states);
+                Console.WriteLine("Time to check for potential duplicates across each state: " + timer.DurationMs());
+
+                CountOccurrencesOfEachPlace(states);
+
                 Console.WriteLine("Execution complete!");
                 Console.ReadKey();
 
@@ -153,7 +165,10 @@ namespace LocationAnalyzer.Parser
                                 {
                                     var match = Regex.Match(currentLine, "(\\b(title=\")\\b).+?(?=,)");
                                     var place = match.ToString().Substring(7);
-                                    state.Places.Add(place);
+                                    if (!state.Places.Any(p => p.Equals(place)))
+                                    {
+                                        state.Places.Add(place);
+                                    }
                                 }
                                 else if (currentLine.Contains("title") && currentLine.Contains(state.Name) 
                                     && !currentLine.Contains("span") && !currentLine.Contains("ul") 
@@ -176,7 +191,10 @@ namespace LocationAnalyzer.Parser
                                     if (match.Length > 5)
                                     {
                                         var place = match.Substring(2);
-                                        state.Places.Add(place);
+                                        if (!state.Places.Any(p => p.Equals(place)))
+                                        {
+                                            state.Places.Add(place);
+                                        }
                                     }
                                 }
                             }
@@ -209,6 +227,64 @@ namespace LocationAnalyzer.Parser
                 }
 
                 sw.Close();
+            }
+        }
+
+        public static void CheckForDuplicatesInEachState(List<State> list)
+        {
+            foreach (var state in list)
+            {
+                foreach (var place in state.Places)
+                {
+                    var count = state.Places.Where(p => p.Equals(place)).Count();
+                    if (count > 1)
+                    {
+                        Console.WriteLine("Duplicate of: " + place + " found in " + state.Name);
+                    }
+                }
+            }
+        }
+
+        public static void CheckForDuplicatesAcrossEachState(List<State> list)
+        {
+            foreach (var state in list)
+            {
+                var places = state.Places;
+
+                foreach (var anotherState in list)
+                {
+                    foreach (var place in anotherState.Places)
+                    {
+                        var count = places.Where(p => p.Contains(place)).Count();
+                        if (count > 1 && !state.Name.Equals(anotherState.Name))
+                        {
+                            Console.WriteLine("Duplicate of: " + place + " found in " + state.Name + " and " + anotherState.Name);
+                        }
+                    }
+                }
+            }
+        }
+
+        public static void CountOccurrencesOfEachPlace(List<State> list)
+        {
+            foreach (var state in list)
+            {
+                foreach (var place in state.Places)
+                {
+                    var currentPlace = place;
+                    var count = 1;
+   
+                    foreach (var anotherState in list)
+                    {
+                        if (!anotherState.Name.Equals(state.Name))
+                        {
+                            var newCount = anotherState.Places.Where(p => p.Equals(currentPlace)).Count();
+                            count += newCount;
+                        }
+                    }
+
+                    Console.WriteLine("Number of times we've seen " + currentPlace + ": " + count);
+                }
             }
         }
     }
