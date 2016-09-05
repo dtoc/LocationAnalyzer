@@ -12,24 +12,26 @@ namespace LocationAnalyzer.Parser
     {
         public static string logfile = "C:\\projects\\practice" + DateTimeOffset.Now.Ticks.ToString() + ".txt";
         public static TimerBase timer = new TimerBase();
+        public static TimerBase timer2 = new TimerBase();
 
         static void Main(string[] args)
         {
             // Create a timestamped file for logging results
             Console.WriteLine("Creating timestamped file for logging results.");
             timer.Start();
+            timer2.Start();
             using (var fc = File.Create(logfile))
             {
                 fc.Close();
             }
-            Console.WriteLine("Time to create timestamped file: " + timer.DurationMs());
+            Console.WriteLine("Time to create timestamped file: " + timer.DurationS());
 
             try
             {
                 Console.WriteLine("Seeding state objects with preliminary data.");
                 timer.Start();
                 List<State> states = SeedStates();
-                Console.WriteLine("Time to seed state objects with preliminary data: " + timer.DurationMs());
+                Console.WriteLine("Time to seed state objects with preliminary data: " + timer.DurationS());
 
                 Console.WriteLine("Seeding state objects with location data.");
                 timer.Start();
@@ -39,21 +41,25 @@ namespace LocationAnalyzer.Parser
                 Console.WriteLine("Logging state places.");
                 timer.Start();
                 LogStatePlaces(states);
-                Console.WriteLine("Time to log state places: " + timer.DurationMs());
+                Console.WriteLine("Time to log state places: " + timer.DurationS());
 
                 Console.WriteLine("Checking for potential duplicates within each state.");
                 timer.Start();
                 CheckForDuplicatesInEachState(states);
-                Console.WriteLine("Time to check for potential duplicates within each state: " + timer.DurationMs());
+                Console.WriteLine("Time to check for potential duplicates within each state: " + timer.DurationS());
 
                 Console.WriteLine("Checking for potential duplicates across each state.");
                 timer.Start();
                 CheckForDuplicatesAcrossEachState(states);
-                Console.WriteLine("Time to check for potential duplicates across each state: " + timer.DurationMs());
+                Console.WriteLine("Time to check for potential duplicates across each state: " + timer.DurationS());
 
+                Console.WriteLine("Checking for number of occurrences of each place.");
+                timer.Start();
                 CountOccurrencesOfEachPlace(states);
+                Console.WriteLine("Tme to check for number of occurrences of each place: " + timer.DurationS());
 
                 Console.WriteLine("Execution complete!");
+                Console.WriteLine("Time to execute: " + timer2.DurationS());
                 Console.ReadKey();
 
             }
