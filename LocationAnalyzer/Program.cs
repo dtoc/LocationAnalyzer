@@ -267,25 +267,30 @@ namespace LocationAnalyzer.Parser
 
         public static void CountOccurrencesOfEachPlace(List<State> list)
         {
+            int numberOfDuplicates = 0;
+
             foreach (var state in list)
             {
                 foreach (var place in state.Places)
                 {
                     var currentPlace = place;
-                    var count = 1;
+                    var placeCount = 1;
    
                     foreach (var anotherState in list)
                     {
                         if (!anotherState.Name.Equals(state.Name))
                         {
                             var newCount = anotherState.Places.Where(p => p.Equals(currentPlace)).Count();
-                            count += newCount;
+                            placeCount += newCount;
+                            numberOfDuplicates += newCount;
                         }
                     }
 
-                    Console.WriteLine("Number of times we've seen " + currentPlace + ": " + count);
+                    Console.WriteLine("Number of times we've seen " + currentPlace + ": " + placeCount);
                 }
             }
+
+            Console.WriteLine("Number of duplicates found: " + numberOfDuplicates);
         }
     }
 }
