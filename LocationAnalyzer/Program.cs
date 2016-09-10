@@ -13,6 +13,7 @@ namespace LocationAnalyzer.Parser
     {
         public static string logfile = "C:\\projects\\practice" + DateTimeOffset.Now.Ticks.ToString() + ".txt";
         public static Stopwatch stopwatch = new Stopwatch();
+        public static bool RunAsParallel = true;
 
         static void Main(string[] args)
         {
@@ -28,30 +29,28 @@ namespace LocationAnalyzer.Parser
 
             try
             {
-                Console.WriteLine("Seeding state objects with preliminary data.");
+                
                 List<State> states = SeedStates();
-                Console.WriteLine("Time to seed state objects with preliminary data: " + stopwatch.Elapsed.Seconds);
+                if (RunAsParallel)
+                    AddLocationDataAsParallel(states);
+                else
+                    AddLocationData(states);
 
-                Console.WriteLine("Seeding state objects with location data.");
-                AddLocationDataAsParallel(states);
-                Console.WriteLine("Time to seed states with location data: " + stopwatch.Elapsed.Seconds);
-
-                Console.WriteLine("Logging state places.");
                 LogStatePlaces(states);
-                Console.WriteLine("Time to log state places: " + stopwatch.Elapsed.Seconds);
 
-                Console.WriteLine("Checking for potential duplicates within each state.");
-                CheckForDuplicatesInEachStateAsParallel(states);
-                Console.WriteLine("Time to check for potential duplicates within each state: " + stopwatch.Elapsed.Seconds);
-
-                Console.WriteLine("Checking for potential duplicates across each state.");
+                if (RunAsParallel)
+                    CheckForDuplicatesInEachStateAsParallel(states);
+                else
+                    CheckForDuplicatesInEachState(states);
+                
                 CheckForDuplicatesAcrossEachState(states);
-                Console.WriteLine("Time to check for potential duplicates across each state: " + stopwatch.Elapsed.Seconds);
 
-                Console.WriteLine("Checking for number of occurrences of each place.");
-                CountOccurrencesOfEachPlaceAsParallel(states);
-                Console.WriteLine("Time to check for number of occurrences of each place: " + stopwatch.Elapsed.Seconds);
+                if (RunAsParallel)
+                    CountOccurrencesOfEachPlaceAsParallel(states);
+                else
+                    CountOccurrencesOfEachPlace(states);
 
+                Console.WriteLine("Time to finish: " + stopwatch.Elapsed.TotalSeconds);
                 Console.ReadKey();
 
             }
@@ -65,6 +64,7 @@ namespace LocationAnalyzer.Parser
 
         public static List<State> SeedStates()
         {
+            Console.WriteLine("Seeding state objects with preliminary data.");
             using (var client = new WebClient())
             {
                 StatesContainer statesContainer = new StatesContainer();
@@ -131,10 +131,9 @@ namespace LocationAnalyzer.Parser
                     }
                 }
 
-                sr.Close();
-
                 // Sorting the states in alphabetical order
                 states = SortStates(states);
+                Console.WriteLine("Time to seed state objects with preliminary data: " + stopwatch.Elapsed.Seconds);
 
                 return states;
             }
@@ -142,6 +141,7 @@ namespace LocationAnalyzer.Parser
 
         public static void AddLocationData(List<State> states)
         {
+            Console.WriteLine("Seeding state objects with location data.");
             string rootUrl = "https://en.wikipedia.org";
             foreach (var state in states)
             {
@@ -205,10 +205,13 @@ namespace LocationAnalyzer.Parser
                     }
                 }
             }
+
+            Console.WriteLine("Time to seed states with location data: " + stopwatch.Elapsed.Seconds);
         }
 
         public static void AddLocationDataAsParallel(List<State> states)
         {
+            Console.WriteLine("Seeding state objects with location data.");
             string rootUrl = "https://en.wikipedia.org";
             Parallel.ForEach(states, state =>
             {
@@ -232,7 +235,7 @@ namespace LocationAnalyzer.Parser
                                 {
                                     var match = Regex.Match(currentLine, "(\\b(title=\")\\b).+?(?=,)");
                                     var place = match.ToString().Substring(7);
-                                    if (!state.Places.Any(p => p.Equals(place)) && !placesToAdd.Any(p => p.Equals(place)))
+                                    if (!state.Places.Contains(place) && !placesToAdd.Contains(place))
                                     {
                                         placesToAdd.Add(place);
                                     }
@@ -258,7 +261,7 @@ namespace LocationAnalyzer.Parser
                                     if (match.Length > 5)
                                     {
                                         var place = match.Substring(2);
-                                        if (!state.Places.Any(p => p.Equals(place)) && !placesToAdd.Any(p => p.Equals(place)))
+                                        if (!state.Places.Contains(place) && !placesToAdd.Contains(place))
                                         {
                                             placesToAdd.Add(place);
                                         }
@@ -276,6 +279,7 @@ namespace LocationAnalyzer.Parser
 
                 state.Places.AddRange(placesToAdd);
             });
+            Console.WriteLine("Time to seed states with location data: " + stopwatch.Elapsed.Seconds);
         }
 
         // Method for sorting our states. Added it as a method in case we later want to sort 
@@ -287,6 +291,8 @@ namespace LocationAnalyzer.Parser
 
         public static void LogStatePlaces(List<State> list)
         {
+            Console.WriteLine("Logging state places.");
+
             using (var sw = File.AppendText(logfile))
             {
                 foreach (var state in list)
@@ -294,13 +300,14 @@ namespace LocationAnalyzer.Parser
                     sw.WriteLine(state.Name);
                     state.Places.ForEach(p => sw.WriteLine("\t" + p));
                 }
-
-                sw.Close();
             }
+
+            Console.WriteLine("Time to log state places: " + stopwatch.Elapsed.Seconds);
         }
 
         public static void CheckForDuplicatesInEachState(List<State> list)
         {
+            Console.WriteLine("Checking for potential duplicates within each state.");
             foreach (var state in list)
             {
                 foreach (var place in state.Places)
@@ -312,10 +319,12 @@ namespace LocationAnalyzer.Parser
                     }
                 }
             }
+            Console.WriteLine("Time to check for potential duplicates within each state: " + stopwatch.Elapsed.Seconds);
         }
 
         public static void CheckForDuplicatesInEachStateAsParallel(List<State> list)
         {
+            Console.WriteLine("Checking for potential duplicates within each state.");
             foreach (var state in list)
             {
                 Parallel.ForEach(state.Places, place =>
@@ -327,10 +336,12 @@ namespace LocationAnalyzer.Parser
                     }
                 });
             }
+            Console.WriteLine("Time to check for potential duplicates within each state: " + stopwatch.Elapsed.Seconds);
         }
 
         public static void CheckForDuplicatesAcrossEachState(List<State> list)
         {
+            Console.WriteLine("Checking for potential duplicates across each state.");
             foreach (var state in list)
             {
                 var places = state.Places;
@@ -347,12 +358,14 @@ namespace LocationAnalyzer.Parser
                     }
                 }
             }
+            Console.WriteLine("Time to check for potential duplicates across each state: " + stopwatch.Elapsed.Seconds);
         }
 
         public static void CountOccurrencesOfEachPlace(List<State> list)
         {
+            Console.WriteLine("Checking for number of occurrences of each place.");
             int numberOfDuplicates = 0;
-
+        
             foreach (var state in list)
             {
                 foreach (var place in state.Places)
@@ -375,11 +388,14 @@ namespace LocationAnalyzer.Parser
             }
 
             Console.WriteLine("Number of duplicates found: " + numberOfDuplicates);
+            Console.WriteLine("Time to check for number of occurrences of each place: " + stopwatch.Elapsed.Seconds);
         }
 
         public static void CountOccurrencesOfEachPlaceAsParallel(List<State> list)
         {
+            Console.WriteLine("Checking for number of occurrences of each place.");
             int numberOfDuplicates = 0;
+
             foreach (var state in list)
             {
                 Parallel.ForEach(state.Places, place =>
@@ -402,6 +418,7 @@ namespace LocationAnalyzer.Parser
             }
 
             Console.WriteLine("Number of duplicates found: " + numberOfDuplicates);
+            Console.WriteLine("Time to check for number of occurrences of each place: " + stopwatch.Elapsed.Seconds);
         }
     }
 }
