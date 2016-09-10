@@ -72,3 +72,12 @@ states that have a list that isn't sorted, I bet I can sort the list before doin
 and have it perform faster than not sorting and just searching everything.
 
 Will be an interesting experiment!
+
+9/10/2016
+
+Keeping a detailed log of everything I worked on is hard! I intend to write a more detailed entry on everything I've done
+and what I've experimented with. But for now, suffice it to say that a slightly less preliminary look at the data shows that
+the real number of duplicates is potentially in the thousands. Meaning there might be several thousand names that are shared 
+for cities, towns, villages, etc. That number will become more clear as I work on my code some more. Today I've experimented a bit
+with profiling strategies and with parallelism in my code for faster performance. Tomorrow I intend to play around with the actual
+problem at hand so that I don't get too sidetracked with parallelism or other fun things. :D

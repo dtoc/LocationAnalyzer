@@ -395,6 +395,7 @@ namespace LocationAnalyzer.Parser
         {
             Console.WriteLine("Checking for number of occurrences of each place.");
             int numberOfDuplicates = 0;
+            int numberOfNonUniquePlaces = 0;
 
             foreach (var state in list)
             {
@@ -414,11 +415,16 @@ namespace LocationAnalyzer.Parser
                     }
 
                     Console.WriteLine("Number of times we've seen " + currentPlace + ": " + placeCount);
+                    if (placeCount > 1)
+                    {
+                        numberOfNonUniquePlaces++;
+                    }
                 });
             }
 
             Console.WriteLine("Number of duplicates found: " + numberOfDuplicates);
             Console.WriteLine("Time to check for number of occurrences of each place: " + stopwatch.Elapsed.Seconds);
+            Console.WriteLine("Number of non-unique places:" + numberOfNonUniquePlaces);
         }
     }
 }
