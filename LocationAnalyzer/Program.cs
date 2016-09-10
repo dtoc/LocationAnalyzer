@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net;
 using System.Text.RegularExpressions;
 using System.Diagnostics;
+using System.Threading.Tasks;
 
 namespace LocationAnalyzer.Parser
 {
@@ -37,7 +38,7 @@ namespace LocationAnalyzer.Parser
 
                 Console.WriteLine("Seeding state objects with location data.");
                 stopwatch1.Restart();
-                AddLocationData(states);
+                AddLocationDataAsParallel(states);
                 stopwatch1.Stop();
                 Console.WriteLine("Time to seed states with location data: " + stopwatch1.Elapsed.Seconds);
 
@@ -61,7 +62,7 @@ namespace LocationAnalyzer.Parser
 
                 Console.WriteLine("Checking for number of occurrences of each place.");
                 stopwatch1.Restart();
-                CountOccurrencesOfEachPlace(states);
+                CountOccurrencesOfEachPlaceAsParallel(states);
                 stopwatch1.Stop();
                 Console.WriteLine("Time to check for number of occurrences of each place: " + stopwatch1.Elapsed.Seconds);
 
@@ -223,6 +224,73 @@ namespace LocationAnalyzer.Parser
             }
         }
 
+        public static void AddLocationDataAsParallel(List<State> states)
+        {
+            string rootUrl = "https://en.wikipedia.org";
+            Parallel.ForEach(states, state =>
+            {
+                Parallel.ForEach(state.Links, link =>
+                {
+                    string targetUrl = rootUrl + link;
+                    targetUrl.Replace("\"", "");
+                    using (var client = new WebClient())
+                    {
+                        try
+                        {
+                            Stream stream = client.OpenRead(targetUrl);
+                            StreamReader sr = new StreamReader(stream);
+                            while (!sr.EndOfStream)
+                            {
+                                var currentLine = sr.ReadLine();
+
+                                if (currentLine.Contains("td scope"))
+                                {
+                                    var match = Regex.Match(currentLine, "(\\b(title=\")\\b).+?(?=,)");
+                                    var place = match.ToString().Substring(7);
+                                    if (!state.Places.Any(p => p.Equals(place)))
+                                    {
+                                        state.Places.Add(place);
+                                    }
+                                }
+                                else if (currentLine.Contains("title") && currentLine.Contains(state.Name)
+                                    && !currentLine.Contains("span") && !currentLine.Contains("ul")
+                                    && !currentLine.Contains("abbr") && !currentLine.Contains("List of")
+                                    && !currentLine.Contains("census") && !currentLine.Contains("places")
+                                    && !currentLine.Contains("Cities"))
+                                {
+                                    var pattern = Regex.Match(currentLine, ".*(?=\")");
+                                    var chunk = pattern.ToString();
+                                    var match = currentLine.Substring(chunk.Length);
+
+                                    pattern = Regex.Match(match, ".*(?=\\<)");
+                                    chunk = pattern.ToString();
+                                    match = match.Substring(0, chunk.Length);
+
+                                    pattern = Regex.Match(match, ".*(?=<)");
+                                    chunk = pattern.ToString();
+                                    match = match.Substring(0, chunk.Length);
+
+                                    if (match.Length > 5)
+                                    {
+                                        var place = match.Substring(2);
+                                        if (!state.Places.Any(p => p.Equals(place)))
+                                        {
+                                            state.Places.Add(place);
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine(ex);
+                            Console.WriteLine("Invalid link");
+                        }
+                    }
+                });
+            });
+        }
+
         // Method for sorting our states. Added it as a method in case we later want to sort 
         // using a custom comparator 
         public static List<State> SortStates(List<State> list)
@@ -302,6 +370,33 @@ namespace LocationAnalyzer.Parser
 
                     Console.WriteLine("Number of times we've seen " + currentPlace + ": " + placeCount);
                 }
+            }
+
+            Console.WriteLine("Number of duplicates found: " + numberOfDuplicates);
+        }
+
+        public static void CountOccurrencesOfEachPlaceAsParallel(List<State> list)
+        {
+            int numberOfDuplicates = 0;
+            foreach (var state in list)
+            {
+                Parallel.ForEach(state.Places, place =>
+                {
+                    var currentPlace = place;
+                    var placeCount = 1;
+
+                    foreach (var anotherState in list)
+                    {
+                        if (!anotherState.Name.Equals(state.Name))
+                        {
+                            var newCount = anotherState.Places.Where(p => p.Equals(currentPlace)).Count();
+                            placeCount += newCount;
+                            numberOfDuplicates += newCount;
+                        }
+                    }
+
+                    Console.WriteLine("Number of times we've seen " + currentPlace + ": " + placeCount);
+                });
             }
 
             Console.WriteLine("Number of duplicates found: " + numberOfDuplicates);
