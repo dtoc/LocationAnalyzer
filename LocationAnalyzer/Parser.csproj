@@ -57,12 +57,6 @@
   <ItemGroup>
     <Content Include="practice.txt" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Timer\Timer.csproj">
-      <Project>{9D90C8CD-97B6-417F-A89E-52C455F8C599}</Project>
-      <Name>Timer</Name>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

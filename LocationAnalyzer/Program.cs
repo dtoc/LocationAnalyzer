@@ -3,63 +3,71 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
-using LocationAnalyzer.Timer;
 using System.Text.RegularExpressions;
+using System.Diagnostics;
 
 namespace LocationAnalyzer.Parser
 {
     class Program
     {
         public static string logfile = "C:\\projects\\practice" + DateTimeOffset.Now.Ticks.ToString() + ".txt";
-        public static TimerBase timer = new TimerBase();
-        public static TimerBase timer2 = new TimerBase();
+        public static Stopwatch stopwatch1 = new Stopwatch();
+        public static Stopwatch stopwatch2 = new Stopwatch();
 
         static void Main(string[] args)
         {
             // Create a timestamped file for logging results
             Console.WriteLine("Creating timestamped file for logging results.");
-            timer.Start();
-            timer2.Start();
+            stopwatch1.Start();
             using (var fc = File.Create(logfile))
             {
                 fc.Close();
             }
-            Console.WriteLine("Time to create timestamped file: " + timer.DurationS());
+            stopwatch1.Stop();
+            Console.WriteLine("Time to create timestamped file: " + stopwatch1.Elapsed.Seconds);
 
             try
             {
+                stopwatch2.Start();
                 Console.WriteLine("Seeding state objects with preliminary data.");
-                timer.Start();
+                stopwatch1.Restart();
                 List<State> states = SeedStates();
-                Console.WriteLine("Time to seed state objects with preliminary data: " + timer.DurationS());
+                stopwatch1.Stop();
+                Console.WriteLine("Time to seed state objects with preliminary data: " + stopwatch1.Elapsed.Seconds);
 
                 Console.WriteLine("Seeding state objects with location data.");
-                timer.Start();
+                stopwatch1.Restart();
                 AddLocationData(states);
-                Console.WriteLine("Time to seed states with location data: " + timer.DurationS());
+                stopwatch1.Stop();
+                Console.WriteLine("Time to seed states with location data: " + stopwatch1.Elapsed.Seconds);
 
                 Console.WriteLine("Logging state places.");
-                timer.Start();
+                stopwatch1.Restart();
                 LogStatePlaces(states);
-                Console.WriteLine("Time to log state places: " + timer.DurationS());
+                stopwatch1.Stop();
+                Console.WriteLine("Time to log state places: " + stopwatch1.Elapsed.Seconds);
 
                 Console.WriteLine("Checking for potential duplicates within each state.");
-                timer.Start();
+                stopwatch1.Restart();
                 CheckForDuplicatesInEachState(states);
-                Console.WriteLine("Time to check for potential duplicates within each state: " + timer.DurationS());
+                stopwatch1.Stop();
+                Console.WriteLine("Time to check for potential duplicates within each state: " + stopwatch1.Elapsed.Seconds);
 
                 Console.WriteLine("Checking for potential duplicates across each state.");
-                timer.Start();
+                stopwatch1.Restart();
                 CheckForDuplicatesAcrossEachState(states);
-                Console.WriteLine("Time to check for potential duplicates across each state: " + timer.DurationS());
+                stopwatch1.Stop();
+                Console.WriteLine("Time to check for potential duplicates across each state: " + stopwatch1.Elapsed.Seconds);
 
                 Console.WriteLine("Checking for number of occurrences of each place.");
-                timer.Start();
+                stopwatch1.Restart();
                 CountOccurrencesOfEachPlace(states);
-                Console.WriteLine("Tme to check for number of occurrences of each place: " + timer.DurationS());
+                stopwatch1.Stop();
+                Console.WriteLine("Time to check for number of occurrences of each place: " + stopwatch1.Elapsed.Seconds);
 
                 Console.WriteLine("Execution complete!");
-                Console.WriteLine("Time to execute: " + timer2.DurationS());
+                stopwatch2.Stop();
+                Console.WriteLine("Time to execute: " + stopwatch2.Elapsed.Seconds);
                 Console.ReadKey();
 
             }
