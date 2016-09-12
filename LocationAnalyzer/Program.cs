@@ -29,7 +29,6 @@ namespace LocationAnalyzer.Parser
 
             try
             {
-                
                 List<State> states = SeedStates();
 
                 if (RunAsParallel)
