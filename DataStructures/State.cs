@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LocationAnalyzer.Parser
+namespace DataStructures
 {
-    class State
+    public class State
     {
         public List<string> Places = new List<string>();
         public List<string> Links = new List<string>();

@@ -6,7 +6,7 @@ using System.Net;
 using System.Text.RegularExpressions;
 using System.Diagnostics;
 using System.Threading.Tasks;
-using Parser;
+using DataStructures;
 
 namespace LocationAnalyzer.Parser
 {
@@ -14,7 +14,7 @@ namespace LocationAnalyzer.Parser
     {
         public static string logfile = "C:\\projects\\practice" + DateTimeOffset.Now.Ticks.ToString() + ".txt";
         public static Stopwatch stopwatch = new Stopwatch();
-        public static bool RunAsParallel = false;
+        public static bool RunAsParallel = true;
         public static StreamWriter sw;
 
         static void Main(string[] args)
@@ -46,16 +46,13 @@ namespace LocationAnalyzer.Parser
                 LogStatePlaces(states);
 
                 if (RunAsParallel)
-                    CheckForDuplicatesInEachStateAsParallel(states);
+                    CheckForDuplicatesInEachState(states);
                 else
                     CheckForDuplicatesInEachState(states);
 
-                CheckForDuplicatesAcrossEachStateV2(states, placeNodes);
-    
-                if (RunAsParallel)
-                    CountOccurrencesOfEachPlaceAsParallel(states);
-                else
-                    CountOccurrencesOfEachPlace(states, placeNodes);
+                CheckForDuplicatesAcrossEachState(states, placeNodes);
+
+                CountOccurrencesOfEachPlace(states, placeNodes);
 
                 Console.WriteLine("Time to finish: " + stopwatch.Elapsed.TotalSeconds);
                 Console.ReadKey();
@@ -351,29 +348,7 @@ namespace LocationAnalyzer.Parser
             Console.WriteLine("Time to check for potential duplicates within each state: " + stopwatch.Elapsed.Seconds);
         }
 
-        public static void CheckForDuplicatesAcrossEachState(List<State> list)
-        {
-            Console.WriteLine("Checking for potential duplicates across each state.");
-            foreach (var state in list)
-            {
-                var places = state.Places;
-
-                foreach (var anotherState in list)
-                {
-                    foreach (var place in anotherState.Places)
-                    {
-                        var count = places.Where(p => p.Contains(place)).Count();
-                        if (count > 1 && !state.Name.Equals(anotherState.Name))
-                        {
-                            sw.WriteLine("Duplicate of: " + place + " found in " + state.Name + " and " + anotherState.Name);
-                        }
-                    }
-                }
-            }
-            Console.WriteLine("Time to check for potential duplicates across each state: " + stopwatch.Elapsed.Seconds);
-        }
-
-        public static void CheckForDuplicatesAcrossEachStateV2(List<State> states, List<PlaceNode> placeNodes)
+        public static void CheckForDuplicatesAcrossEachState(List<State> states, List<PlaceNode> placeNodes)
         {
             foreach (var place in placeNodes)
             {
@@ -413,43 +388,6 @@ namespace LocationAnalyzer.Parser
 
             Console.WriteLine("Number of duplicates found: " + places.Where(p => p.StatesThatHaveThisPlace.Count > 1).Count());
             Console.WriteLine("Time to check for number of occurrences of each place: " + stopwatch.Elapsed.Seconds);
-        }
-
-        public static void CountOccurrencesOfEachPlaceAsParallel(List<State> list)
-        {
-            Console.WriteLine("Checking for number of occurrences of each place.");
-            int numberOfDuplicates = 0;
-            int numberOfNonUniquePlaces = 0;
-
-            foreach (var state in list)
-            {
-                Parallel.ForEach(state.Places, place =>
-                {
-                    var currentPlace = place;
-                    var placeCount = 1;
-
-                    foreach (var anotherState in list)
-                    {
-                        if (!anotherState.Name.Equals(state.Name))
-                        {
-                            var newCount = anotherState.Places.Where(p => p.Equals(currentPlace)).Count();
-                            placeCount += newCount;
-                            numberOfDuplicates += newCount;
-                        }
-                    }
-
-                    Console.WriteLine("Number of times we've seen " + currentPlace + ": " + placeCount);
-                    if (placeCount > 1)
-                    {
-                        numberOfNonUniquePlaces++;
-                    }
-                });
-            }
-
-            sw.WriteLine("Number of duplicates found: " + numberOfDuplicates);
-            Console.WriteLine("Number of duplicates found: " + numberOfDuplicates);
-            Console.WriteLine("Time to check for number of occurrences of each place: " + stopwatch.Elapsed.Seconds);
-            Console.WriteLine("Number of non-unique places:" + numberOfNonUniquePlaces);
         }
     }
 }

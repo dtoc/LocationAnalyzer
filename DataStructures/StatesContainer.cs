@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace LocationAnalyzer.Parser
+namespace DataStructures
 {
     public class StatesContainer
     {
