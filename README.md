@@ -81,3 +81,39 @@ the real number of duplicates is potentially in the thousands. Meaning there mig
 for cities, towns, villages, etc. That number will become more clear as I work on my code some more. Today I've experimented a bit
 with profiling strategies and with parallelism in my code for faster performance. Tomorrow I intend to play around with the actual
 problem at hand so that I don't get too sidetracked with parallelism or other fun things. :D
+
+9/11/2016
+
+Did some code clean up today! Added a new version of the method that checks for duplicates. It's much faster and cleaner 
+than the garbage I had before. :D I also pulled out individual references to StreamWriter and created just a single global
+StreamWriter object that anything in the main class can access. And cleaned up odds and ends. Here's a sample of what the 
+output looks like right now:
+
+---
+Found duplicates of: Vienna in: 
+
+	Georgia
+	Illinois
+	Maine
+	Missouri
+	New York
+	South Dakota
+	Virginia
+	Wisconsin
+---
+
+Nice, eh? :D Next up I need to work on:
+
+1) Add cleaner code for constraining the content of each page as my agent crawls Wikipedia. Some of my results consider counties 
+to be cities. Counties are not cities - they often encompass cities. So a smarter agent with better constraint checking can help me
+eliminate bad results. (So far the results are pretty awesome!)
+
+2) Cache results from the web crawling. That way my agent can check for cached results first and avoid crawling the web entirely if
+it isn't needed. This way if I want to experiment with faster methods for crunching the data I can do so without having to waste time
+crawling the web for the same exact data each time I execute the app.
+
+3) Format the data into JSON or some other format and add a nice visualization. It'd be cool to slap this on the web for anyone to 
+visualize immediately without needing to download and execute a console app that spits out text results. :D
+
+And there's much more to work on! Very fun little sided project so far. Learning a ton about parallelism and crawling the web
+and just writing code in general. Tons of tun. :D 
