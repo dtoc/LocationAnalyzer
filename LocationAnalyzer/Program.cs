@@ -6,6 +6,7 @@ using System.Net;
 using System.Text.RegularExpressions;
 using System.Diagnostics;
 using System.Threading.Tasks;
+using Parser;
 
 namespace LocationAnalyzer.Parser
 {
@@ -13,7 +14,7 @@ namespace LocationAnalyzer.Parser
     {
         public static string logfile = "C:\\projects\\practice" + DateTimeOffset.Now.Ticks.ToString() + ".txt";
         public static Stopwatch stopwatch = new Stopwatch();
-        public static bool RunAsParallel = true;
+        public static bool RunAsParallel = false;
 
         static void Main(string[] args)
         {
@@ -42,9 +43,11 @@ namespace LocationAnalyzer.Parser
                     CheckForDuplicatesInEachStateAsParallel(states);
                 else
                     CheckForDuplicatesInEachState(states);
-                
-                CheckForDuplicatesAcrossEachState(states);
 
+                //CheckForDuplicatesAcrossEachState(states);
+                CheckForDuplicatesAcrossEachStateV2(states);
+                Console.ReadKey();
+    
                 if (RunAsParallel)
                     CountOccurrencesOfEachPlaceAsParallel(states);
                 else
@@ -359,6 +362,48 @@ namespace LocationAnalyzer.Parser
                 }
             }
             Console.WriteLine("Time to check for potential duplicates across each state: " + stopwatch.Elapsed.Seconds);
+        }
+
+        public static void CheckForDuplicatesAcrossEachStateV2(List<State> states)
+        {
+            // Generate a list of PlaceNodes
+            List<PlaceNode> placeNodes = new List<PlaceNode>();
+            states.ForEach(s => s.Places.ForEach(p => placeNodes.Add(new PlaceNode(p))));
+            
+            foreach (var place in placeNodes)
+            {
+                var currentPlace = place.Place;
+                var statesThatHaveThisPlace = states.Where(s => s.Places.Contains(currentPlace)).ToList();
+                foreach (var stateThatHasThisPlace in statesThatHaveThisPlace)
+                {
+                    if (!place.StatesThatHaveThisPlace.Contains(stateThatHasThisPlace.Name))
+                    {
+                        place.StatesThatHaveThisPlace.Add(stateThatHasThisPlace.Name);
+                    }
+                }
+            }
+
+            foreach (var state in states)
+            {
+                foreach (var place in state.Places)
+                {
+                    var targetNode = placeNodes.Where(pn => pn.StatesThatHaveThisPlace.Equals(place)).FirstOrDefault();
+                    
+                }
+            }
+
+            var duplicatePlaces = placeNodes.Where(pn => pn.StatesThatHaveThisPlace.Count > 1);
+            Console.WriteLine("Number of duplicate places: " + duplicatePlaces.Count());
+
+            foreach (var duplicatePlace in duplicatePlaces)
+            {
+                Console.WriteLine("Found duplicates of: " + duplicatePlace.Place + " in: ");
+                Console.WriteLine();
+                foreach (var state in duplicatePlace.StatesThatHaveThisPlace)
+                {
+                    Console.WriteLine("\t" + state);
+                }
+            }
         }
 
         public static void CountOccurrencesOfEachPlace(List<State> list)
