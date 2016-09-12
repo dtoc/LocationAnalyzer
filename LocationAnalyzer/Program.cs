@@ -42,7 +42,7 @@ namespace LocationAnalyzer.Parser
                 LogStatePlaces(states);
 
                 if (RunAsParallel)
-                    CheckForDuplicatesInEachState(states);
+                    CheckForDuplicatesInEachStateAsParallel(states);
                 else
                     CheckForDuplicatesInEachState(states);
 
@@ -318,19 +318,26 @@ namespace LocationAnalyzer.Parser
             }
         }
 
-        public static void CheckForDuplicatesInEachStateAsParallel(List<State> list)
+        public static void CheckForDuplicatesInEachStateAsParallel(List<State> states)
         {
             Console.WriteLine("Checking for potential duplicates within each state.");
-            foreach (var state in list)
+            List<string> results = new List<string>();
+
+            foreach (var state in states)
             {
                 Parallel.ForEach(state.Places, place =>
                 {
                     var count = state.Places.Where(l => place.Equals(place)).Count();
                     if (count > 1)
                     {
-                        sw.WriteLine("Duplicate of: " + place + " found in " + state.Name);
+                        results.Add("Duplicate of: " + place + " found in " + state.Name);
                     }
                 });
+            }
+
+            foreach (var result in results)
+            {
+                sw.WriteLine(result);
             }
         }
 
