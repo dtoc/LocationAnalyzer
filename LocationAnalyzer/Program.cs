@@ -15,6 +15,7 @@ namespace LocationAnalyzer.Parser
         public static string logfile = "C:\\projects\\practice" + DateTimeOffset.Now.Ticks.ToString() + ".txt";
         public static Stopwatch stopwatch = new Stopwatch();
         public static bool RunAsParallel = false;
+        public static StreamWriter sw;
 
         static void Main(string[] args)
         {
@@ -25,6 +26,8 @@ namespace LocationAnalyzer.Parser
             {
                 fc.Close();
             }
+
+            sw = File.AppendText(logfile);
             stopwatch.Stop();
             Console.WriteLine("Time to create timestamped file: " + stopwatch.Elapsed.Seconds);
 
@@ -32,6 +35,7 @@ namespace LocationAnalyzer.Parser
             {
                 
                 List<State> states = SeedStates();
+
                 if (RunAsParallel)
                     AddLocationDataAsParallel(states);
                 else
@@ -44,9 +48,7 @@ namespace LocationAnalyzer.Parser
                 else
                     CheckForDuplicatesInEachState(states);
 
-                //CheckForDuplicatesAcrossEachState(states);
                 CheckForDuplicatesAcrossEachStateV2(states);
-                Console.ReadKey();
     
                 if (RunAsParallel)
                     CountOccurrencesOfEachPlaceAsParallel(states);
@@ -296,13 +298,10 @@ namespace LocationAnalyzer.Parser
         {
             Console.WriteLine("Logging state places.");
 
-            using (var sw = File.AppendText(logfile))
+            foreach (var state in list)
             {
-                foreach (var state in list)
-                {
-                    sw.WriteLine(state.Name);
-                    state.Places.ForEach(p => sw.WriteLine("\t" + p));
-                }
+                sw.WriteLine(state.Name);
+                state.Places.ForEach(p => sw.WriteLine("\t" + p));
             }
 
             Console.WriteLine("Time to log state places: " + stopwatch.Elapsed.Seconds);
@@ -318,7 +317,7 @@ namespace LocationAnalyzer.Parser
                     var count = state.Places.Where(p => p.Equals(place)).Count();
                     if (count > 1)
                     {
-                        Console.WriteLine("Duplicate of: " + place + " found in " + state.Name);
+                        sw.WriteLine("Duplicate of: " + place + " found in " + state.Name);
                     }
                 }
             }
@@ -335,7 +334,7 @@ namespace LocationAnalyzer.Parser
                     var count = state.Places.Where(l => place.Equals(place)).Count();
                     if (count > 1)
                     {
-                        Console.WriteLine("Duplicate of: " + place + " found in " + state.Name);
+                        sw.WriteLine("Duplicate of: " + place + " found in " + state.Name);
                     }
                 });
             }
@@ -356,7 +355,7 @@ namespace LocationAnalyzer.Parser
                         var count = places.Where(p => p.Contains(place)).Count();
                         if (count > 1 && !state.Name.Equals(anotherState.Name))
                         {
-                            Console.WriteLine("Duplicate of: " + place + " found in " + state.Name + " and " + anotherState.Name);
+                            sw.WriteLine("Duplicate of: " + place + " found in " + state.Name + " and " + anotherState.Name);
                         }
                     }
                 }
@@ -393,15 +392,15 @@ namespace LocationAnalyzer.Parser
             }
 
             var duplicatePlaces = placeNodes.Where(pn => pn.StatesThatHaveThisPlace.Count > 1);
-            Console.WriteLine("Number of duplicate places: " + duplicatePlaces.Count());
+            sw.WriteLine("Number of duplicate places: " + duplicatePlaces.Count());
 
             foreach (var duplicatePlace in duplicatePlaces)
             {
-                Console.WriteLine("Found duplicates of: " + duplicatePlace.Place + " in: ");
-                Console.WriteLine();
+                sw.WriteLine("Found duplicates of: " + duplicatePlace.Place + " in: ");
+                sw.WriteLine();
                 foreach (var state in duplicatePlace.StatesThatHaveThisPlace)
                 {
-                    Console.WriteLine("\t" + state);
+                    sw.WriteLine("\t" + state);
                 }
             }
         }
@@ -428,10 +427,11 @@ namespace LocationAnalyzer.Parser
                         }
                     }
 
-                    Console.WriteLine("Number of times we've seen " + currentPlace + ": " + placeCount);
+                    sw.WriteLine("Number of times we've seen " + currentPlace + ": " + placeCount);
                 }
             }
 
+            sw.WriteLine("Number of duplicates found: " + numberOfDuplicates);
             Console.WriteLine("Number of duplicates found: " + numberOfDuplicates);
             Console.WriteLine("Time to check for number of occurrences of each place: " + stopwatch.Elapsed.Seconds);
         }
@@ -467,6 +467,7 @@ namespace LocationAnalyzer.Parser
                 });
             }
 
+            sw.WriteLine("Number of duplicates found: " + numberOfDuplicates);
             Console.WriteLine("Number of duplicates found: " + numberOfDuplicates);
             Console.WriteLine("Time to check for number of occurrences of each place: " + stopwatch.Elapsed.Seconds);
             Console.WriteLine("Number of non-unique places:" + numberOfNonUniquePlaces);
