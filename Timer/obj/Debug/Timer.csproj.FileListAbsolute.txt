@@ -1,6 +1,0 @@
-C:\projects\LocationAnalyzer\Timer\obj\Debug\Timer.csprojResolveAssemblyReference.cache
-C:\projects\LocationAnalyzer\Timer\bin\Debug\Timer.dll.config
-C:\projects\LocationAnalyzer\Timer\bin\Debug\Timer.dll
-C:\projects\LocationAnalyzer\Timer\bin\Debug\Timer.pdb
-C:\projects\LocationAnalyzer\Timer\obj\Debug\Timer.dll
-C:\projects\LocationAnalyzer\Timer\obj\Debug\Timer.pdb
