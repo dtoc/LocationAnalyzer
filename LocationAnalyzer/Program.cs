@@ -322,17 +322,17 @@ namespace LocationAnalyzer.Parser
             Console.WriteLine("Checking for potential duplicates within each state.");
             List<string> results = new List<string>();
 
-            foreach (var state in states)
+            Parallel.ForEach(states, state =>
             {
                 Parallel.ForEach(state.Places, place =>
                 {
-                    var count = state.Places.Where(l => place.Equals(place)).Count();
+                    var count = state.Places.Where(p => p.Equals(place)).Count();
                     if (count > 1)
                     {
                         results.Add("Duplicate of: " + place + " found in " + state.Name);
                     }
                 });
-            }
+            });
 
             foreach (var result in results)
             {
