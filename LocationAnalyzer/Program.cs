@@ -13,7 +13,6 @@ namespace LocationAnalyzer.Parser
     class Program
     {
         public static string logfile = "C:\\projects\\practice" + DateTimeOffset.Now.Ticks.ToString() + ".txt";
-        public static Stopwatch stopwatch = new Stopwatch();
         public static bool RunAsParallel = true;
         public static StreamWriter sw;
 
@@ -21,15 +20,12 @@ namespace LocationAnalyzer.Parser
         {
             // Create a timestamped file for logging results
             Console.WriteLine("Creating timestamped file for logging results.");
-            stopwatch.Start();
             using (var fc = File.Create(logfile))
             {
                 fc.Close();
             }
 
             sw = File.AppendText(logfile);
-            stopwatch.Stop();
-            Console.WriteLine("Time to create timestamped file: " + stopwatch.Elapsed.Seconds);
 
             try
             {
@@ -54,7 +50,6 @@ namespace LocationAnalyzer.Parser
 
                 CountOccurrencesOfEachPlace(states, placeNodes);
 
-                Console.WriteLine("Time to finish: " + stopwatch.Elapsed.TotalSeconds);
                 Console.ReadKey();
 
             }
@@ -137,8 +132,6 @@ namespace LocationAnalyzer.Parser
 
                 // Sorting the states in alphabetical order
                 states = SortStates(states);
-                Console.WriteLine("Time to seed state objects with preliminary data: " + stopwatch.Elapsed.Seconds);
-
                 return states;
             }
         }
@@ -217,8 +210,6 @@ namespace LocationAnalyzer.Parser
                     }
                 }
             }
-
-            Console.WriteLine("Time to seed states with location data: " + stopwatch.Elapsed.Seconds);
         }
 
         public static void AddLocationDataAsParallel(List<State> states)
@@ -291,7 +282,6 @@ namespace LocationAnalyzer.Parser
 
                 state.Places.AddRange(placesToAdd);
             });
-            Console.WriteLine("Time to seed states with location data: " + stopwatch.Elapsed.Seconds);
         }
 
         // Method for sorting our states. Added it as a method in case we later want to sort 
@@ -310,8 +300,6 @@ namespace LocationAnalyzer.Parser
                 sw.WriteLine(state.Name);
                 state.Places.ForEach(p => sw.WriteLine("\t" + p));
             }
-
-            Console.WriteLine("Time to log state places: " + stopwatch.Elapsed.Seconds);
         }
 
         public static void CheckForDuplicatesInEachState(List<State> list)
@@ -328,7 +316,6 @@ namespace LocationAnalyzer.Parser
                     }
                 }
             }
-            Console.WriteLine("Time to check for potential duplicates within each state: " + stopwatch.Elapsed.Seconds);
         }
 
         public static void CheckForDuplicatesInEachStateAsParallel(List<State> list)
@@ -345,7 +332,6 @@ namespace LocationAnalyzer.Parser
                     }
                 });
             }
-            Console.WriteLine("Time to check for potential duplicates within each state: " + stopwatch.Elapsed.Seconds);
         }
 
         public static void CheckForDuplicatesAcrossEachState(List<State> states, List<PlaceNode> placeNodes)
@@ -387,7 +373,6 @@ namespace LocationAnalyzer.Parser
             }
 
             Console.WriteLine("Number of duplicates found: " + places.Where(p => p.StatesThatHaveThisPlace.Count > 1).Count());
-            Console.WriteLine("Time to check for number of occurrences of each place: " + stopwatch.Elapsed.Seconds);
         }
     }
 }
