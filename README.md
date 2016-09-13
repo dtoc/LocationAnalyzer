@@ -10,7 +10,16 @@ a fun little project. ;D
 First I will try to grab the data I need from Wikipedia's pages directly. It's possible to download Wikipedia pages as 
 XML files, so I will also try to incorporate local data at a later date. 
 
-To see a sample of the output, take a look at the practice.txt file I've attached. 
+To see a sample of the output, take a look at http://locationanalyzer.azurewebsites.net/Home
+
+Note that as of 9/13/2016 it's a slow endpoint that takes about 15-20 seconds to warm up and load some results. This is because
+this was originally a console application. I only recently slapped on a front end, and I slapped it all together as quickly as possible
+because I wanted to get something up as soon as possible. My next steps will be to make the front end presentable and work on the back end
+so that the endpoint is fast. I'm also going to make use of a SQL database to store my findings as part of a cache so that my ParserAgent
+doesn't need to do the work every single time someone loads the page. There are many more things I want to do with this side project.
+The data itself isn't entirely clean, the README log is rather slim with regard to detail...and poorly written since I slapped it together...
+the code is a goddawful mess because I slapped it together and it turned into a web app after starting out as a console app....Plenty of
+more fun to be had, especially once the basic front end and back end are cleaned up enough for me to start adding in some data visualizations. :)
 
 8/21/2016
 When I'm grabbing links for each state object, I currently look for a few different types of links. For example, 
