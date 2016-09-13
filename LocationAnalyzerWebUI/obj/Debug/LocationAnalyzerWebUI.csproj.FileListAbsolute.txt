@@ -14,6 +14,7 @@ C:\projects\LocationAnalyzer\LocationAnalyzerWebUI\bin\roslyn\VBCSCompiler.exe.c
 C:\projects\LocationAnalyzer\LocationAnalyzerWebUI\bin\LocationAnalyzerWebUI.dll.config
 C:\projects\LocationAnalyzer\LocationAnalyzerWebUI\bin\LocationAnalyzerWebUI.dll
 C:\projects\LocationAnalyzer\LocationAnalyzerWebUI\bin\LocationAnalyzerWebUI.pdb
+C:\projects\LocationAnalyzer\LocationAnalyzerWebUI\bin\DataStructures.dll
 C:\projects\LocationAnalyzer\LocationAnalyzerWebUI\bin\Microsoft.AI.Agent.Intercept.dll
 C:\projects\LocationAnalyzer\LocationAnalyzerWebUI\bin\Microsoft.AI.DependencyCollector.dll
 C:\projects\LocationAnalyzer\LocationAnalyzerWebUI\bin\Microsoft.AI.PerfCounterCollector.dll
@@ -23,12 +24,15 @@ C:\projects\LocationAnalyzer\LocationAnalyzerWebUI\bin\Microsoft.AI.WindowsServe
 C:\projects\LocationAnalyzer\LocationAnalyzerWebUI\bin\Microsoft.ApplicationInsights.dll
 C:\projects\LocationAnalyzer\LocationAnalyzerWebUI\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll
 C:\projects\LocationAnalyzer\LocationAnalyzerWebUI\bin\Microsoft.Web.Infrastructure.dll
+C:\projects\LocationAnalyzer\LocationAnalyzerWebUI\bin\Parser.exe
 C:\projects\LocationAnalyzer\LocationAnalyzerWebUI\bin\System.Web.Helpers.dll
 C:\projects\LocationAnalyzer\LocationAnalyzerWebUI\bin\System.Web.Mvc.dll
 C:\projects\LocationAnalyzer\LocationAnalyzerWebUI\bin\System.Web.Razor.dll
 C:\projects\LocationAnalyzer\LocationAnalyzerWebUI\bin\System.Web.Webpages.Deployment.dll
 C:\projects\LocationAnalyzer\LocationAnalyzerWebUI\bin\System.Web.Webpages.dll
 C:\projects\LocationAnalyzer\LocationAnalyzerWebUI\bin\System.Web.Webpages.Razor.dll
+C:\projects\LocationAnalyzer\LocationAnalyzerWebUI\bin\DataStructures.pdb
+C:\projects\LocationAnalyzer\LocationAnalyzerWebUI\bin\Parser.pdb
 C:\projects\LocationAnalyzer\LocationAnalyzerWebUI\bin\Microsoft.AI.DependencyCollector.xml
 C:\projects\LocationAnalyzer\LocationAnalyzerWebUI\bin\Microsoft.AI.ServerTelemetryChannel.xml
 C:\projects\LocationAnalyzer\LocationAnalyzerWebUI\bin\Microsoft.AI.Web.xml

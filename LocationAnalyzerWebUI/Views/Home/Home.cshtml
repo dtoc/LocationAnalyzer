@@ -11,8 +11,15 @@
     <title>Home</title>
 </head>
 <body>
-    <div> 
-        <p>Hello World</p>
-    </div>
+    @{
+        foreach (var duplicate in ViewBag.duplicates)
+        {
+            <h3>Found duplicate of @duplicate.Place in: </h3>
+            foreach (var state in @duplicate.StatesThatHaveThisPlace)
+            {
+                <div class="panel-body">@state</div>
+            }
+        }
+    }
 </body>
 </html>
