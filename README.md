@@ -21,6 +21,7 @@ The data itself isn't entirely clean, the README log is rather slim with regard 
 the code is a goddawful mess because I slapped it together and it turned into a web app after starting out as a console app....Plenty of
 more fun to be had, especially once the basic front end and back end are cleaned up enough for me to start adding in some data visualizations. :)
 
+
 8/21/2016
 When I'm grabbing links for each state object, I currently look for a few different types of links. For example, 
 "List_of_places_in" and "List_of_cities_in" links might contain different data. Therefore I want to process
