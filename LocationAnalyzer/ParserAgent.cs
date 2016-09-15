@@ -297,7 +297,7 @@ namespace Parser
 
             Parallel.ForEach(states, state =>
             {
-                Parallel.ForEach(state.Places, place =>
+                Parallel.ForEach(state?.Places, place =>
                 {
                     var count = state.Places.Where(p => p.Equals(place)).Count();
                     if (count > 1)
