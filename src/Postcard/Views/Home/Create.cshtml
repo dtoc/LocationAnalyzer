@@ -1,21 +1,14 @@
 ﻿@model PlaceNode
 
 @{
-    ViewBag.Title = "New Blog";
+    ViewBag.Title = "Create";
 }
 
 <h2>@ViewData["Title"]</h2>
 
 <form asp-controller="Home" asp-action="Create" method="post" class="form-horizontal" role="form">
     <div class="form-horizontal">
-        <div asp-validation-summary="All" class="text-danger"></div>
-        <div class="form-group">
-            <label asp-for="PlaceName" class="col-md-2 control-label"></label>
-            <div class="col-md-10">
-                <input asp-for="PlaceName" class="form-control" />
-                <span asp-validation-for="PlaceName" class="text-danger"></span>
-            </div>
-        </div>
+        <p>Are you sure you want to scrape the net for location data? This might take 30-60 seconds.</p>
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
                 <input type="submit" value="Create" class="btn btn-default" />
