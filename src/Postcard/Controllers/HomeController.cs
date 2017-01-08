@@ -36,25 +36,8 @@ namespace Postcard.Controllers
         {
             if (ModelState.IsValid)
             {
-                List<PlaceNode> nodesToAdd = new List<PlaceNode>();
-
                 ParserAgent parser = new ParserAgent();
-                var duplicates = await parser.Parse();
-
-                /*foreach (var duplicate in duplicates)
-                {
-                    var placeNode = new PlaceNode
-                    {
-                        PlaceName = duplicate.PlaceName,
-                        StateName = duplicate.StateName,
-                        link = duplicate.link,
-                        StatesThatHaveThisPlace = duplicate.StatesThatHaveThisPlace
-                    };
-
-                    nodesToAdd.Add(placeNode);
-                }*/
-
-                _context.PlaceNodes.AddRange(duplicates);
+                _context.PlaceNodes.AddRange(await parser.Parse());
                 _context.SaveChanges();
                 
                 return RedirectToAction("Index");
@@ -70,7 +53,7 @@ namespace Postcard.Controllers
         }
 
         [HttpPost]
-        public IActionResult Destroyyy()
+        public IActionResult DestroyAction()
         {
             try
             {

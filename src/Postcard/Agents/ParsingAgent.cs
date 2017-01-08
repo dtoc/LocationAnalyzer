@@ -36,11 +36,6 @@ namespace Parser
 
                 placeNodes = SeedPlaceNodes(states);
 
-                /*if (RunAsParallel)
-                    CheckForDuplicatesInEachStateAsParallel(states);
-                else
-                    CheckForDuplicatesInEachState(states);*/
-
                 duplicates = CheckForDuplicatesAcrossEachState(states, placeNodes);
 
                 return placeNodes;
@@ -285,43 +280,6 @@ namespace Parser
         public List<State> SortStates(List<State> list)
         {
             return list.OrderBy(s => s.Name).ToList();
-        }
-
-        public void CheckForDuplicatesInEachState(List<State> list)
-        {
-            foreach (var state in list)
-            {
-                foreach (var place in state.Places)
-                {
-                    var count = state.Places.Where(p => p.Equals(place)).Count();
-                    if (count > 1)
-                    {
-                        Console.WriteLine("Duplicate of: " + place + " found in " + state.Name);
-                    }
-                }
-            }
-        }
-
-        public void CheckForDuplicatesInEachStateAsParallel(List<State> states)
-        {
-            List<string> results = new List<string>();
-
-            Parallel.ForEach(states, state =>
-            {
-                Parallel.ForEach(state?.Places, place =>
-                {
-                    var count = state.Places.Where(p => p.Equals(place)).Count();
-                    if (count > 1)
-                    {
-                        results.Add("Duplicate of: " + place + " found in " + state.Name);
-                    }
-                });
-            });
-
-            foreach (var result in results)
-            {
-                Console.WriteLine(result);
-            }
         }
 
         public List<PlaceNode> CheckForDuplicatesAcrossEachState(List<State> states, List<PlaceNode> placeNodes)
