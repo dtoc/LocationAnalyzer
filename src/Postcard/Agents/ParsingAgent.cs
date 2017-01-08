@@ -332,6 +332,7 @@ namespace Parser
 
                 var statesThatHaveThisPlace = states.Where(s => s.Places.Contains(currentPlace)).ToList();
                 place.StatesThatHaveThisPlace.Add(place.StateName);
+                place.numberOfStatesThatHaveThisPlace++;
                 foreach (var stateThatHasThisPlace in statesThatHaveThisPlace)
                 {
                     if (!place.StatesThatHaveThisPlace.Contains(stateThatHasThisPlace.Name))
@@ -342,7 +343,7 @@ namespace Parser
                 }
             }
 
-            var duplicatePlaces = placeNodes.Where(pn => pn.StatesThatHaveThisPlace.Count() > 1).ToList();
+            var duplicatePlaces = placeNodes.Where(pn => pn.StatesThatHaveThisPlace.Count() > 0).ToList();
 
             return duplicatePlaces;
         }
