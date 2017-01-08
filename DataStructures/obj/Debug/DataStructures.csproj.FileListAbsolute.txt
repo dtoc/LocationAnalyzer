@@ -1,7 +1,0 @@
-C:\projects\LocationAnalyzer\DataStructures\bin\Debug\DataStructures.dll
-C:\projects\LocationAnalyzer\DataStructures\bin\Debug\DataStructures.pdb
-C:\projects\LocationAnalyzer\DataStructures\obj\Debug\DataStructures.dll
-C:\projects\LocationAnalyzer\DataStructures\obj\Debug\DataStructures.pdb
-C:\projects\LocationAnalyzer\DataStructures\bin\Debug\Microsoft.ApplicationInsights.dll
-C:\projects\LocationAnalyzer\DataStructures\bin\Debug\Microsoft.ApplicationInsights.xml
-C:\projects\LocationAnalyzer\DataStructures\obj\Debug\DataStructures.csprojResolveAssemblyReference.cache

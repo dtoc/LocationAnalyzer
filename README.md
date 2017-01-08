@@ -1,4 +1,4 @@
-# LocationAnalyzer
+# Postcard
 I drove through the United States and noticed some duplicate town and city names. I wonder...how many duplicates are there?
 How many street names occur more than once despite not being shared on some contiguous road? How many cities have the same 
 name despite having no relation? 
@@ -9,6 +9,14 @@ a fun little project. ;D
 
 First I will try to grab the data I need from Wikipedia's pages directly. It's possible to download Wikipedia pages as 
 XML files, so I will also try to incorporate local data at a later date. 
+
+1/7/2017
+
+I recently started working on this project again. I was slammed by work and had to put it on hold for a while. I've converted the original 
+app to an ASP.NET Core app. It performs much more quickly now and has a nicer front end. The front end and performance are still a work in progress.
+Once I clean up some stuff, I'll deploy the ASP.NET Core version to my Azure account so that it can be accessible by anyone. 
+
+9/13/2016
 
 To see a sample of the output, take a look at http://locationanalyzer.azurewebsites.net/Home
 
@@ -21,27 +29,50 @@ The data itself isn't entirely clean, the README log is rather slim with regard 
 the code is a goddawful mess because I slapped it together and it turned into a web app after starting out as a console app....Plenty of
 more fun to be had, especially once the basic front end and back end are cleaned up enough for me to start adding in some data visualizations. :)
 
-8/21/2016
-When I'm grabbing links for each state object, I currently look for a few different types of links. For example, 
-"List_of_places_in" and "List_of_cities_in" links might contain different data. Therefore I want to process
-those two pages as separate sources of data. Right now I have eight pages that I might want to process individually
-when getting each state's places. They are:
+9/11/2016
 
-"List_of_places_in"
-"List_of_cities_in"
-"List_of_towns_in"
-"List_of_cities_and_towns_in"
-"List_of_municipalities_in"
-"List_of_populated_places"
-"List_of_census-designated-places_in"
-"List_of_unincorporated"
+Did some code clean up today! Added a new version of the method that checks for duplicates. It's much faster and cleaner 
+than the garbage I had before. :D I also pulled out individual references to StreamWriter and created just a single global
+StreamWriter object that anything in the main class can access. And cleaned up odds and ends. Here's a sample of what the 
+output looks like right now:
 
-I want to make sure that each state's list of "places" is as complete as possible. To that effect, I want to grab 
-a state's places, towns, cities, municipalities, etc. A city might also be called a town or a village, but I found
-some cases where a list of towns will have places that a list of cities will not, and vice versa. To get as complete a 
-picture as possible into a state's places, I will write slightly different parsing code so that I can get data from
-each of these lists. The list of cities might have its html structured differently than the list of towns, so different
-parsing strategies will be necessary for each page.
+---
+Found duplicates of: Vienna in: 
+
+	Georgia
+	Illinois
+	Maine
+	Missouri
+	New York
+	South Dakota
+	Virginia
+	Wisconsin
+---
+
+Nice, eh? :D Next up I need to work on:
+
+1) Add cleaner code for constraining the content of each page as my agent crawls Wikipedia. Some of my results consider counties 
+to be cities. Counties are not cities - they often encompass cities. So a smarter agent with better constraint checking can help me
+eliminate bad results. (So far the results are pretty awesome!)
+
+2) Cache results from the web crawling. That way my agent can check for cached results first and avoid crawling the web entirely if
+it isn't needed. This way if I want to experiment with faster methods for crunching the data I can do so without having to waste time
+crawling the web for the same exact data each time I execute the app.
+
+3) Format the data into JSON or some other format and add a nice visualization. It'd be cool to slap this on the web for anyone to 
+visualize immediately without needing to download and execute a console app that spits out text results. :D
+
+And there's much more to work on! Very fun little sided project so far. Learning a ton about parallelism and crawling the web
+and just writing code in general. Tons of tun. :D 
+
+9/10/2016
+
+Keeping a detailed log of everything I worked on is hard! I intend to write a more detailed entry on everything I've done
+and what I've experimented with. But for now, suffice it to say that a slightly less preliminary look at the data shows that
+the real number of duplicates is potentially in the thousands. Meaning there might be several thousand names that are shared 
+for cities, towns, villages, etc. That number will become more clear as I work on my code some more. Today I've experimented a bit
+with profiling strategies and with parallelism in my code for faster performance. Tomorrow I intend to play around with the actual
+problem at hand so that I don't get too sidetracked with parallelism or other fun things. :D
 
 8/29/2016
 
@@ -82,47 +113,24 @@ and have it perform faster than not sorting and just searching everything.
 
 Will be an interesting experiment!
 
-9/10/2016
+8/21/2016
+When I'm grabbing links for each state object, I currently look for a few different types of links. For example, 
+"List_of_places_in" and "List_of_cities_in" links might contain different data. Therefore I want to process
+those two pages as separate sources of data. Right now I have eight pages that I might want to process individually
+when getting each state's places. They are:
 
-Keeping a detailed log of everything I worked on is hard! I intend to write a more detailed entry on everything I've done
-and what I've experimented with. But for now, suffice it to say that a slightly less preliminary look at the data shows that
-the real number of duplicates is potentially in the thousands. Meaning there might be several thousand names that are shared 
-for cities, towns, villages, etc. That number will become more clear as I work on my code some more. Today I've experimented a bit
-with profiling strategies and with parallelism in my code for faster performance. Tomorrow I intend to play around with the actual
-problem at hand so that I don't get too sidetracked with parallelism or other fun things. :D
+"List_of_places_in"
+"List_of_cities_in"
+"List_of_towns_in"
+"List_of_cities_and_towns_in"
+"List_of_municipalities_in"
+"List_of_populated_places"
+"List_of_census-designated-places_in"
+"List_of_unincorporated"
 
-9/11/2016
-
-Did some code clean up today! Added a new version of the method that checks for duplicates. It's much faster and cleaner 
-than the garbage I had before. :D I also pulled out individual references to StreamWriter and created just a single global
-StreamWriter object that anything in the main class can access. And cleaned up odds and ends. Here's a sample of what the 
-output looks like right now:
-
----
-Found duplicates of: Vienna in: 
-
-	Georgia
-	Illinois
-	Maine
-	Missouri
-	New York
-	South Dakota
-	Virginia
-	Wisconsin
----
-
-Nice, eh? :D Next up I need to work on:
-
-1) Add cleaner code for constraining the content of each page as my agent crawls Wikipedia. Some of my results consider counties 
-to be cities. Counties are not cities - they often encompass cities. So a smarter agent with better constraint checking can help me
-eliminate bad results. (So far the results are pretty awesome!)
-
-2) Cache results from the web crawling. That way my agent can check for cached results first and avoid crawling the web entirely if
-it isn't needed. This way if I want to experiment with faster methods for crunching the data I can do so without having to waste time
-crawling the web for the same exact data each time I execute the app.
-
-3) Format the data into JSON or some other format and add a nice visualization. It'd be cool to slap this on the web for anyone to 
-visualize immediately without needing to download and execute a console app that spits out text results. :D
-
-And there's much more to work on! Very fun little sided project so far. Learning a ton about parallelism and crawling the web
-and just writing code in general. Tons of tun. :D 
+I want to make sure that each state's list of "places" is as complete as possible. To that effect, I want to grab 
+a state's places, towns, cities, municipalities, etc. A city might also be called a town or a village, but I found
+some cases where a list of towns will have places that a list of cities will not, and vice versa. To get as complete a 
+picture as possible into a state's places, I will write slightly different parsing code so that I can get data from
+each of these lists. The list of cities might have its html structured differently than the list of towns, so different
+parsing strategies will be necessary for each page.

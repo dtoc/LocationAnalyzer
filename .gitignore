@@ -1,8 +1,0 @@
-﻿################################################################################
-# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
-################################################################################
-
-/.vs/LocationAnalyzer/v14/.suo
-/LocationAnalyzer/bin/Debug
-/LocationAnalyzer/obj/Debug
-/LocationAnalyzer/LocationAnalyzer.csproj.user
