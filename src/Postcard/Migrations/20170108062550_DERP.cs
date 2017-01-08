@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace Postcard.Migrations
 {
-    public partial class InitDb : Migration
+    public partial class DERP : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

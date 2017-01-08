@@ -7,8 +7,8 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Postcard.Migrations
 {
     [DbContext(typeof(PostcardContext))]
-    [Migration("20170108045515_InitDb")]
-    partial class InitDb
+    [Migration("20170108062550_DERP")]
+    partial class DERP
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
