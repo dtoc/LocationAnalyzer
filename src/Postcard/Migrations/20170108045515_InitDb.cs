@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace Postcard.Migrations
 {
-    public partial class NewMig : Migration
+    public partial class InitDb : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -15,10 +15,10 @@ namespace Postcard.Migrations
                 {
                     PlaceNodeID = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
-                    NumberOfStatesThatHaveThisPlace = table.Column<int>(nullable: false),
                     PlaceName = table.Column<string>(nullable: true),
                     StateName = table.Column<string>(nullable: true),
-                    link = table.Column<string>(nullable: true)
+                    link = table.Column<string>(nullable: true),
+                    numberOfStatesThatHaveThisPlace = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
