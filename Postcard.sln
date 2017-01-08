@@ -1,0 +1,32 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{BD199A81-6BF3-40AF-B1E2-F9783A96D676}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{E0BE2D44-C4B3-433C-856A-838E10F501BB}"
+	ProjectSection(SolutionItems) = preProject
+		global.json = global.json
+	EndProjectSection
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Postcard", "src\Postcard\Postcard.xproj", "{8B547D7F-543D-4629-A12D-F8E032FF94FB}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{8B547D7F-543D-4629-A12D-F8E032FF94FB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8B547D7F-543D-4629-A12D-F8E032FF94FB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8B547D7F-543D-4629-A12D-F8E032FF94FB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8B547D7F-543D-4629-A12D-F8E032FF94FB}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{8B547D7F-543D-4629-A12D-F8E032FF94FB} = {BD199A81-6BF3-40AF-B1E2-F9783A96D676}
+	EndGlobalSection
+EndGlobal
