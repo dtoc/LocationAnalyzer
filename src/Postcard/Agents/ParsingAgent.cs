@@ -73,7 +73,8 @@ namespace Parser
                             || currentLine.Contains("List_of_municipalities_in")
                             || currentLine.Contains("List_of_populated_places_")
                             || currentLine.Contains("List_of_census-designated-places_in")
-                            || currentLine.Contains("List_of_unincorporated"))
+                            || currentLine.Contains("List_of_unincorporated")
+                            || currentLine.Contains("List_of_villages_in"))
                         {
                             // Since each line contains multiple bits of useful information, let's tokenize the line.
                             var tokens = currentLine.Split(' ');
@@ -123,11 +124,23 @@ namespace Parser
         {
             // Generate a list of PlaceNodes
             List<PlaceNode> placeNodes = new List<PlaceNode>();
-            states.ForEach(s => s.Places.ForEach(p => placeNodes.Add(new PlaceNode()
+            foreach (var state in states)
             {
-                PlaceName = p,
-                StateName = s.Name
-            })));
+                foreach (var place in state.Places)
+                {
+                    if (!placeNodes.Any(pn => pn.PlaceName.Equals(place)))
+                    {
+                        var placeNode = new PlaceNode()
+                        {
+                            PlaceName = place,
+                            StateName = state.Name
+                        };
+
+                        placeNodes.Add(placeNode);
+                    }
+                }
+            }
+
             return placeNodes;
         }
 
