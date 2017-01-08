@@ -13,7 +13,6 @@ namespace Parser
 {
     public class ParserAgent
     {
-        public bool RunAsParallel = true;
         public List<State> states;
         public List<PlaceNode> placeNodes;
         public List<PlaceNode> duplicates;
@@ -29,10 +28,7 @@ namespace Parser
             {
                 states = await SeedStates();
 
-                if (RunAsParallel)
-                    await AddLocationDataAsParallel(states);
-                else
-                    await AddLocationData(states);
+                AddLocationData(states);
 
                 placeNodes = SeedPlaceNodes(states);
 
@@ -135,75 +131,7 @@ namespace Parser
             return placeNodes;
         }
 
-        public async Task AddLocationData(List<State> states)
-        {
-            string rootUrl = "https://en.wikipedia.org";
-            foreach (var state in states)
-            {
-                foreach (var link in state.Links)
-                {
-                    string targetUrl = rootUrl + link;
-                    targetUrl.Replace("\"", "");
-                    using (var client = new HttpClient())
-                    {
-                        try
-                        {
-                            var response = await client.GetAsync(targetUrl);
-                            var content = response.Content;
-
-                            StreamReader sr = new StreamReader(await content.ReadAsStreamAsync());
-                            while (!sr.EndOfStream)
-                            {
-                                var currentLine = sr.ReadLine();
-
-                                if (currentLine.Contains("td scope"))
-                                {
-                                    var match = Regex.Match(currentLine, "(\\b(title=\")\\b).+?(?=,)");
-                                    var place = match.ToString().Substring(7);
-                                    if (!state.Places.Any(p => p.Equals(place)))
-                                    {
-                                        state.Places.Add(place);
-                                    }
-                                }
-                                else if (currentLine.Contains("title") && currentLine.Contains(state.Name)
-                                    && !currentLine.Contains("span") && !currentLine.Contains("ul")
-                                    && !currentLine.Contains("abbr") && !currentLine.Contains("List of")
-                                    && !currentLine.Contains("census") && !currentLine.Contains("places")
-                                    && !currentLine.Contains("Cities"))
-                                {
-                                    var pattern = Regex.Match(currentLine, ".*(?=\")");
-                                    var chunk = pattern.ToString();
-                                    var match = currentLine.Substring(chunk.Length);
-
-                                    pattern = Regex.Match(match, ".*(?=\\<)");
-                                    chunk = pattern.ToString();
-                                    match = match.Substring(0, chunk.Length);
-
-                                    pattern = Regex.Match(match, ".*(?=<)");
-                                    chunk = pattern.ToString();
-                                    match = match.Substring(0, chunk.Length);
-
-                                    if (match.Length > 5)
-                                    {
-                                        var place = match.Substring(2);
-                                        if (!state.Places.Any(p => p.Equals(place)))
-                                        {
-                                            state.Places.Add(place);
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                        catch (Exception ex)
-                        {
-                            Console.WriteLine(ex.ToString());
-                        }
-                    }
-                }
-            }
-        }
-
-        public async Task AddLocationDataAsParallel(List<State> states)
+        public void AddLocationData(List<State> states)
         {
             string rootUrl = "https://en.wikipedia.org";
             Parallel.ForEach(states, state =>
