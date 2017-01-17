@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Postcard.Models;
 using System;
 
 public class PostcardContext : DbContext
@@ -8,4 +9,5 @@ public class PostcardContext : DbContext
     { }
 
     public DbSet<PlaceNode> PlaceNodes { get; set; }
+    public DbSet<SearchToken> SearchTokens { get; set; }
 }

@@ -32,6 +32,18 @@ namespace Postcard.Migrations
 
                     b.ToTable("PlaceNodes");
                 });
+
+            modelBuilder.Entity("Postcard.Models.SearchToken", b =>
+                {
+                    b.Property<string>("SearchTokenId")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<string>("SearchName");
+
+                    b.HasKey("SearchTokenId");
+
+                    b.ToTable("SearchTokens");
+                });
         }
     }
 }

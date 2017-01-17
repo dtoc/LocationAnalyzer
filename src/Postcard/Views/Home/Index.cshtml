@@ -29,12 +29,6 @@
                 @Html.DisplayFor(modelItem => item.PlaceName)
             </td>
             <td>
-                <span class="badge">@{
-                    if (item.StatesThatHaveThisPlace != null)
-                    {
-                        @Html.DisplayFor(modelItem => item.StatesThatHaveThisPlace.Count)
-                    }
-                }</span>
                 <span class="badge">@Html.DisplayFor(modelItem => item.numberOfStatesThatHaveThisPlace)</span>
             </td>
         </tr>
