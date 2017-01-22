@@ -34,7 +34,7 @@ namespace Postcard
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            var connection = @"Server=(localdb)\ProjectsV13;Database=Postcard;Trusted_Connection=True;";
+            var connection = Microsoft.Extensions.Configuration.ConfigurationExtensions.GetConnectionString(this.Configuration, "MS_TableConnectionString");
             services.AddDbContext<PostcardContext>(options => options.UseSqlServer(connection));
             // Add framework services.
             services.AddApplicationInsightsTelemetry(Configuration);
