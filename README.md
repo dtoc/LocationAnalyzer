@@ -10,6 +10,30 @@ a fun little project. ;D
 First I will try to grab the data I need from Wikipedia's pages directly. It's possible to download Wikipedia pages as 
 XML files, so I will also try to incorporate local data at a later date. 
 
+1/22/2017
+
+My project has been deployed via Azure! I have a simple deploy pipeline that swaps out my project's database connection string and replaces it with
+a connection string to a database I have configured in my Azure environment. You can view the project live at http://postcard2.azurewebsites.net/
+
+Some things I want to do next are:
+
+1) Set up my deployment pipeline so that each push to my git repo kicks off a deployment to a test environment in Azure. That way I can set up my git 
+so that whenever there's a merge into my master branch, it automatically deploys everything to my "production" environment in Azure.
+
+2) Actually get around to cleaning up the data.
+
+3) Clean up the front-end.
+
+4) Beef up performance. My Azure instance runs very slow compared with my laptop. Granted, my laptop is pretty beastly...but there's no reason why I can't
+get the app's performance where I want it. It takes about 1 minute and 30 seconds for it to scrape Wikipedia for the data I want when it runs in Azure. When 
+the app runs on my laptop, it does the same work in about 30 seconds. The code isn't optimized at all and does a lot of stuff that it doesn't need to do. So
+I'll get around to actually cleaning it up soon. 
+
+I feel like I've gotten a tremendous amount of knowledge out of this project so far. I've learned how to scrape the web, how to stash results into a database,
+how to deploy a project via Azure, how to set up your deployment pipeline so that it overwrites appsettings.json with "production" values instead. How to write 
+code that runs relatively quickly (it used to take 3 minutes to run on my laptop before I got it down to 30 seconds). Been a ton of fun! Now that I'm relatively free
+evenings and weekends (decided to defer my graduate program for a year) I'll be able to spend more time on this kind of stuff. :D
+
 1/7/2017
 
 I recently started working on this project again. I was slammed by work and had to put it on hold for a while. I've converted the original 
