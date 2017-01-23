@@ -17,8 +17,11 @@
         tags.push([element.placeName, element.numberOfStatesThatHaveThisPlace]);
     });
 
+
+    // TODO remove when done with debugging
     console.log(tags);
 
+    // TODO remove when done with debugging
     var list = tags.map(function (word) {
         return [word[0], Math.round(word[1] / 1)];
 
