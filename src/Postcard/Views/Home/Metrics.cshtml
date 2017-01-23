@@ -1,0 +1,28 @@
+﻿@model List<PlaceNode>
+@inject IJsonHelper Json;
+
+<div>
+    <h1>Word Cloud of Most Common Location Names</h1>
+    <canvas id="cloud" style="position: relative;" width="500px" height="500px"></canvas>
+</div>
+
+<script src="~/js/wordcloud2.js"></script>
+
+
+<script type="text/javascript">
+    var tags = []
+
+    var placeNodes = @Html.Raw(Json.Serialize(ViewData["PlaceNodes"]));
+    placeNodes.forEach(function(element) {
+        tags.push([element.placeName, element.numberOfStatesThatHaveThisPlace]);
+    });
+
+    console.log(tags);
+
+    var list = tags.map(function (word) {
+        return [word[0], Math.round(word[1] / 1)];
+
+    });
+
+    WordCloud(document.getElementById("cloud"), { list: list });
+</script>

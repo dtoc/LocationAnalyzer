@@ -10,6 +10,7 @@ namespace Postcard.Controllers
     public class HomeController : Controller
     {
         private PostcardContext _context;
+        private List<PlaceNode> placeNodes;
         public int PageSize = 50;
 
         public HomeController(PostcardContext context)
@@ -20,7 +21,7 @@ namespace Postcard.Controllers
         public IActionResult Index(int page = 1)
         {
             ParserAgent parser = new Parser.ParserAgent();
-            var placeNodes = _context.PlaceNodes.OrderByDescending(pn => pn.numberOfStatesThatHaveThisPlace).Skip((page - 1) * PageSize).Take(PageSize).ToList();
+            placeNodes = _context.PlaceNodes.OrderByDescending(pn => pn.numberOfStatesThatHaveThisPlace).Skip((page - 1) * PageSize).Take(PageSize).ToList();
             parser.ProcessPlaceNodeStateDataForDisplay(placeNodes);
             return View(placeNodes);
         }
@@ -43,6 +44,13 @@ namespace Postcard.Controllers
                 return RedirectToAction("Index");
             }
             
+            return View();
+        }
+
+        [HttpGet]
+        public IActionResult Metrics()
+        {
+            ViewData["PlaceNodes"] = _context.PlaceNodes.Where(pn => pn.numberOfStatesThatHaveThisPlace > 10).ToList();
             return View();
         }
 

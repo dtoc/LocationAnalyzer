@@ -13,6 +13,13 @@ namespace Parser
 {
     public class ParserAgent
     {
+        // TODO add irrelevantTokens to database rather than as a property
+        public List<string> irrelevantTokens = new List<string>()
+        {
+            "Demographics", "Tourist attractions", "Economy", "History", "Politics",
+            "Topics", "Delegations", "Education", "Government", "Geography", "Transportation",
+            "Crime", "Sports", "Index"
+        };
         public List<State> states;
         public List<PlaceNode> placeNodes;
         public List<PlaceNode> duplicates;
@@ -197,7 +204,7 @@ namespace Parser
                                     if (match.Length > 5)
                                     {
                                         var place = match.Substring(2);
-                                        if (!state.Places.Contains(place) && !placesToAdd.Contains(place))
+                                        if (!state.Places.Contains(place) && !placesToAdd.Contains(place) && !irrelevantTokens.Contains(place))
                                         {
                                             placesToAdd.Add(place);
                                         }

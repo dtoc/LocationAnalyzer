@@ -9,6 +9,12 @@
     ]
   },
   {
+    "outputFileName": "wwwroot/js/worldcloud2.js",
+    "inputFiles": [
+      "wwwroot/js/worldcloud2.js"
+    ]
+  },
+  {
     "outputFileName": "wwwroot/js/site.min.js",
     "inputFiles": [
       "wwwroot/js/site.js"
