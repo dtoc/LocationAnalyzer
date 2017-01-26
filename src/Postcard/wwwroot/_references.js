@@ -1,4 +1,5 @@
 ﻿/// <autosync enabled="true" />
+/// <reference path="js/modestmaps.js" />
 /// <reference path="js/site.js" />
 /// <reference path="js/wordcloud2.js" />
 /// <reference path="lib/bootstrap/dist/js/bootstrap.js" />

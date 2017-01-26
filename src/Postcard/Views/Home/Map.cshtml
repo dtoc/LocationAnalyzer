@@ -1,0 +1,21 @@
+﻿@model List<PlaceNode>
+@inject IJsonHelper Json;
+
+<div>
+    <br/>
+    </br>
+    <h1>Map</h1>
+    <br/>
+    <br/>
+    <p><div id="map"></div></p>
+</div>
+
+<script type="text/javascript">
+    mapboxgl.accessToken = 'pk.eyJ1IjoiZHRvY2lsYSIsImEiOiJjaXlkdDJ2YXcwMHJ4MzNtbHo2eXN6OTN3In0.r3cQDKcV2_ov1aqr1fBwyw';
+    var map = new mapboxgl.Map({
+        container: 'map', // container id
+        style: 'mapbox://styles/mapbox/satellite-v9', //stylesheet location
+        center: [-89.6501, 39.7817], // starting position
+        zoom: 9 // starting zoom
+    });
+</script>

@@ -55,6 +55,13 @@ namespace Postcard.Controllers
         }
 
         [HttpGet]
+        public IActionResult Map()
+        {
+            ViewData["PlaceNodes"] = _context.PlaceNodes.ToList();
+            return View();
+        }
+
+        [HttpGet]
         public IActionResult Destroy()
         {
             return View();
