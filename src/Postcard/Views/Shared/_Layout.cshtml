@@ -31,7 +31,22 @@
               asp-fallback-test-class="sr-only" asp-fallback-test-property="position" asp-fallback-test-value="absolute" />
         <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
         
+        <script src='https://api.tiles.mapbox.com/mapbox-gl-js/v0.31.0/mapbox-gl.js'></script>
         <link href='https://api.tiles.mapbox.com/mapbox-gl-js/v0.31.0/mapbox-gl.css' rel='stylesheet' />
+        <style>
+            body {
+                margin: 0;
+                padding: 0;
+            }
+
+            #map {
+                position: static;
+                top: 0;
+                bottom: 0;
+                width: 100%;
+                height: 100%;
+            }
+        </style>
     </environment>
     @Html.ApplicationInsightsJavaScript(TelemetryConfiguration)
 </head>
