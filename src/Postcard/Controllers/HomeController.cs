@@ -35,6 +35,16 @@ namespace Postcard.Controllers
         [HttpPost]
         public async Task<IActionResult> Create(bool runAsParallel)
         {
+            try
+            {
+                _context.PlaceNodes.RemoveRange(_context.PlaceNodes);
+                _context.SaveChanges();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Derp!");
+            }
+
             if (ModelState.IsValid)
             {
                 ParserAgent parser = new ParserAgent();
