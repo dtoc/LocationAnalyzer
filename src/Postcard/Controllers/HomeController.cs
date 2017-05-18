@@ -48,12 +48,16 @@ namespace Postcard.Controllers
             if (ModelState.IsValid)
             {
                 ParserAgent parser = new ParserAgent();
-                _context.PlaceNodes.AddRange(await parser.Parse());
-                _context.SaveChanges();
-                
+                var results = await parser.Parse();
+                if (!_context.PlaceNodes.Any())
+                {
+                    _context.PlaceNodes.AddRange(results);
+                    _context.SaveChanges();
+                }
+
                 return RedirectToAction("Index");
             }
-            
+
             return View();
         }
 
